@@ -1,0 +1,15 @@
+pyTelegramBotAPI
+python-binance
+binance
+six~=1.16.0
+pathlib
+asgiref~=3.6.0
+Django
+dj_database_url
+django-simpleui
+whitenoise
+ccxt
+crypto_pay_api_sdk
+requests
+heroku3
+python-dateutil
