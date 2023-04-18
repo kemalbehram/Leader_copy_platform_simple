@@ -34,7 +34,7 @@ class Command(BaseCommand):
 
             for trade in traders:
                 sleep(0.3)
-                t = threading.Thread(target=get_trader_1, args=(trade.link, trade.name))
+                t = threading.Thread(target=get_trader_1, args=(trade.link, trade.name, trade))
                 t.start()
 
             # получаем ордера со статусом Фолс

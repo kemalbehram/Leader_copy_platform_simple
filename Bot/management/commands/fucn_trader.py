@@ -656,7 +656,7 @@ def get_trader_1(link, name, trade):
                                       f'💰Size: <b>{round(abs(size * entry_price))}$</b>\n'
                                 # инициализируем дату и добавляем в базу
                                 signal = Signal(
-                                    name_trader=trade.id,
+                                    name_trader=trade,
                                     symbol=symbol,
                                     side='SELL',
                                     size=abs(size),
@@ -678,7 +678,7 @@ def get_trader_1(link, name, trade):
                                       f'📊Entry price: <b>{entry_price}</b>\n' \
                                       f'💰Size: <b>{round(abs(size * entry_price))}$</b>\n'
                                 signal = Signal(
-                                    name_trader=trade.id,
+                                    name_trader=trade,
                                     symbol=symbol,
                                     side='BUY',
                                     size=abs(size),
