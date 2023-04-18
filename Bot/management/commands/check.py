@@ -2,7 +2,7 @@ from time import sleep
 
 from django.core.management.base import BaseCommand
 
-from Bot.management.commands.fucn_trader import check_users, pair_list_update
+from Bot.management.commands.fucn_trader import check_users
 
 
 class Command(BaseCommand):
@@ -13,4 +13,4 @@ class Command(BaseCommand):
             sleep(500)
             check_users()
             # follows_js()
-            pair_list_update()
+            # pair_list_update()

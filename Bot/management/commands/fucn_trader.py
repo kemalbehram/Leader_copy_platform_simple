@@ -74,21 +74,21 @@ def get_count(number):
 #         json.dump(follow_list, f)  # Writes follow_list to follows.json
 
 
-def pair_list_update():
-    api_url = "https://api.bybit.com"  # The API URL
-    session = HTTP(api_url)  # Activates the session
-
-    sym_list = []  # The list of symbols
-    symbols = session.query_symbol()  # Retrieves all symbols from the API
-    if "ret_msg" in symbols.keys():
-        if symbols["ret_msg"] == "OK":
-            symbols = symbols["result"]
-            for symbol in symbols:
-                # Filters out symbols with a quote currency other than USDT and those that are not currently trading
-                if symbol["quote_currency"] == "USDT" and symbol["status"] == "Trading":
-                    sym_list.append(symbol['name'])  # Adds symbol name to sym_list
-    with open('pair_list.json', 'w') as f:
-        json.dump(sym_list, f)  # Writes sym_list to pair_list.json
+# def pair_list_update():
+#     api_url = "https://api.bybit.com"  # The API URL
+#     session = HTTP(api_url)  # Activates the session
+#
+#     sym_list = []  # The list of symbols
+#     symbols = session.query_symbol()  # Retrieves all symbols from the API
+#     if "ret_msg" in symbols.keys():
+#         if symbols["ret_msg"] == "OK":
+#             symbols = symbols["result"]
+#             for symbol in symbols:
+#                 # Filters out symbols with a quote currency other than USDT and those that are not currently trading
+#                 if symbol["quote_currency"] == "USDT" and symbol["status"] == "Trading":
+#                     sym_list.append(symbol['name'])  # Adds symbol name to sym_list
+#     with open('pair_list.json', 'w') as f:
+#         json.dump(sym_list, f)  # Writes sym_list to pair_list.json
 
 
 def check_users():
