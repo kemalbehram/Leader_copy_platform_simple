@@ -93,7 +93,7 @@ class Admin(models.Model):
     user_name = models.CharField(max_length=30, verbose_name='Name', blank=True, default='Admin')
     user_id = models.CharField(max_length=30, verbose_name='User or Channel ID in Telegram', unique=True)
     subs_active = models.BooleanField(default=True, verbose_name='Active', help_text='If user admin true/else false')
-    admin_leverage = models.PositiveIntegerField(verbose_name='Admin default leverage', default=10)
+    leverage = models.PositiveIntegerField(verbose_name='Admin default leverage', default=10)
 
     percent_balance = models.PositiveIntegerField(
         verbose_name='Percent allocated for order',
