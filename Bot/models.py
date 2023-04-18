@@ -91,8 +91,8 @@ class Users(models.Model):
 
 class Admin(models.Model):
     user_name = models.CharField(max_length=30, verbose_name='Name', blank=True, default='Admin')
-    user_id = models.CharField(max_length=30, verbose_name='User or Channel ID in Telegram', unique=True)
-    subs_active = models.BooleanField(default=True, verbose_name='Active', help_text='If user admin true/else false')
+    user_id = models.CharField(max_length=30, verbose_name='User ID in Telegram', unique=True)
+    subs_active = models.BooleanField(default=False, verbose_name='If user admin true/else false')
     leverage = models.PositiveIntegerField(verbose_name='Admin default leverage', default=10)
 
     percent_balance = models.PositiveIntegerField(
@@ -102,6 +102,12 @@ class Admin(models.Model):
             MinValueValidator(1),
             MaxValueValidator(100),
         ]
+    )
+    exchange = models.CharField(
+        max_length=25,
+        choices=EXCHANGE_CHOICES,
+        default=not_con,
+        verbose_name='Exchange'
     )
     api_key = models.CharField(max_length=265, verbose_name='api_key', blank=True)
     api_secret = models.CharField(max_length=265, verbose_name='api_secret', blank=True)
