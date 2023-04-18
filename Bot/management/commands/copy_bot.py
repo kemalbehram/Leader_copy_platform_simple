@@ -31,13 +31,21 @@ class Command(BaseCommand):
         while True:
             sleep(4)
             traders = Traders.objects.filter(is_active=True)
-
             for trade in traders:
-                get_trader_1(trade.link, trade.name, trade)
-                # sleep(0.3)
-                # t = threading.Thread(target=get_trader_1, args=(trade.link, trade.name, trade))
-                # t.start()
+                try:
+                    get_trader_1(
+                        trade.link, trade.name, trade
+                    )
+                except Exception as e:
+                    # The name of your app and dyno
+                    app_name = 'os.environ.get("app_name")'
+                    debug(
+                        e, app_name
+                    )
 
+                    exc_type, exc_obj, exc_tb = sys.exc_info()
+                    print(str(e) + 'line = ' + str(exc_tb.tb_lineno))
+            sleep(1)
             # получаем ордера со статусом Фолс
             signals = Signal.objects.filter(status=False)
             # получаем айди трейдеров и
@@ -45,11 +53,17 @@ class Command(BaseCommand):
             for signal in signals:
                 sleep(0.3)
                 try:
+                    bots.send_message(
+                        my_id, signal.message, parse_mode='HTML'
+                    )
+                except:
+                    pass
+                try:
                     t = threading.Thread(target=open_position, args=(signal, admin))
                     t.start()
                 except Exception as e:
                     # The name of your app and dyno
-                    app_name = ''
+                    app_name = 'os.environ.get("app_name")'
                     debug(
                         e, app_name
                     )
@@ -69,30 +83,9 @@ class Command(BaseCommand):
                         exc_type, exc_obj, exc_tb = sys.exc_info()
                         print(str(e) + 'line = ' + str(exc_tb.tb_lineno))
 
-            # # получаем айди трейдеров и
-            # for signal in signals:
-            #     # trader = Traders.objects.get(id=signal.name_trader.id)
-            #     #
-            #     # with open('follows.json') as f:
-            #     #     templates = json.load(f)
-            #     #
-            #     # for temp in templates:
-            #     #     if trader.name == temp['Trader']:
-            #     #         for follow in temp['followers']:
-            #     #             user = Users.objects.get(id=follow['id'])
-            #                 t = threading.Thread(target=open_position, args=(signal, user))
-            #                 t.start()
-            for signal in signals:
-                sleep(0.3)
-                try:
-                    bots.send_message(
-                        my_id, signal.message, parse_mode='HTML'
-                    )
-                except:
-                    pass
             # обновляем статус сигналов
             signals.update(status=True)
-            sleep(2)
+            sleep(3)
             # получаем активные ордера
             sig_ord = Signal.objects.filter(is_active=True, status=True)
 
@@ -105,36 +98,10 @@ class Command(BaseCommand):
 
                     a = now - parser.parse(date_end)
                     delta = a.seconds / 60
-                    # если срок годности ордера больше 2 минут, то получаем информацию об открытой позиции
+                    # если срок годности ордера больше 1 минут, то получаем информацию об открытой позиции
                     # и закрываем её
                     print('DELTA = ' + str(round(delta, 2)) + f' {order_s.symbol}/ trader {order_s.name_trader}')
                     if delta >= 1.5:
-                        try:
-                            t = threading.Thread(target=order_close, args=(order_s, admin))
-                            t.start()
-                        except Exception as e:
-                            # The name of your app and dyno
-                            app_name = 'os.environ.get("app_name")'
-                            debug(
-                                e, app_name
-                            )
-                            exc_type, exc_obj, exc_tb = sys.exc_info()
-                            print(str(e) + 'line = ' + str(exc_tb.tb_lineno))
-                        # users = Users.objects.filter(subs_active=True)
-                        for user in users:
-                            sleep(0.5)
-                            try:
-                                t = threading.Thread(target=order_close, args=(order_s, user))
-                                t.start()
-                            except Exception as e:
-                                # The name of your app and dyno
-                                app_name = 'os.environ.get("app_name")'
-                                debug(
-                                    e, app_name
-                                )
-                                exc_type, exc_obj, exc_tb = sys.exc_info()
-                                print(str(e) + 'line = ' + str(exc_tb.tb_lineno))
-                        sleep(1)
                         if order_s.side == 'BUY':
                             msg = f'<b>📳 TRADE CLOSED 📳</b>\n\n' \
                                   f'🥷🏾Trader: <b>{order_s.name_trader}</b>\n' \
@@ -157,36 +124,37 @@ class Command(BaseCommand):
                                 bots.send_message(my_id, msg, parse_mode='HTML')
                             except:
                                 pass
-                        sleep(0.5)
+                        try:
+                            t = threading.Thread(target=order_close, args=(order_s, admin))
+                            t.start()
+                        except Exception as e:
+                            # The name of your app and dyno
+                            app_name = 'os.environ.get("app_name")'
+                            debug(
+                                e, app_name
+                            )
+                            exc_type, exc_obj, exc_tb = sys.exc_info()
+                            print(str(e) + 'line = ' + str(exc_tb.tb_lineno))
+                        for user in users:
+                            try:
+                                t = threading.Thread(target=order_close, args=(order_s, user))
+                                t.start()
+                            except Exception as e:
+                                # The name of your app and dyno
+                                app_name = 'os.environ.get("app_name")'
+                                debug(
+                                    e, app_name
+                                )
+                                exc_type, exc_obj, exc_tb = sys.exc_info()
+                                print(str(e) + 'line = ' + str(exc_tb.tb_lineno))
                         Signal.objects.filter(symbol=order_s.symbol, is_active=True).update(is_active=False)
-                        # trader = Traders.objects.get(id=order_s.name_trader.id)
-                        # # получаем подпищиков трейдеров
-                        # with open('follows.json') as f:
-                        #     templates = json.load(f)
-                        #
-                        # for temp in templates:
-                        #     if trader.name == temp['Trader']:
-                        #         for follow in temp['followers']:
-                        #             sleep(0.3)
-                        #             # получаем пользователя из базы и закрываем позицию
-                        #             user = Users.objects.get(id=follow['id'])
-                        #             t = threading.Thread(target=order_close, args=(order_s, user))
-                        #             t.start()
 
             except Exception as e:
-                # The name of your app and dyno
                 app_name = 'os.environ.get("app_name")'
                 debug(
                     e, app_name
                 )
                 exc_type, exc_obj, exc_tb = sys.exc_info()
                 print(str(e) + 'line = ' + str(exc_tb.tb_lineno))
-
+            sleep(2)
             Signal.objects.filter(is_active=False).delete()
-            sleep(1)
-            # try:
-            #     check_users()
-            #     sleep(1)
-            #     pair_list_update()
-            # except:
-            #     pass
