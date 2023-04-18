@@ -108,7 +108,7 @@ class Command(BaseCommand):
                     # если срок годности ордера больше 2 минут, то получаем информацию об открытой позиции
                     # и закрываем её
                     print('DELTA = ' + str(round(delta, 2)) + f' {order_s.symbol}/ trader {order_s.name_trader}')
-                    if delta >= 2:
+                    if delta >= 1.5:
                         try:
                             t = threading.Thread(target=order_close, args=(order_s, admin))
                             t.start()
