@@ -426,6 +426,13 @@ def open_position(signal, user):
                     type='MARKET',
                     quantity=quantity,
                 )
+                print(
+                    f'Position open!\n'
+                    f'User = {user}\n'
+                    f'symbol: {symbol}'
+                )
+                print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
+
             elif exchange == 'Bybit':
                 with open('bybit_pair_list.json', 'r') as f:
                     sym_list = json.load(f)
@@ -530,6 +537,13 @@ def open_position(signal, user):
                                     'position_idx': 2
                                 }
                             )
+                        print(
+                            f'Position open!\n'
+                            f'User = {user}\n'
+                            f'symbol: {symbol}'
+                        )
+                        print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
+
                     else:
                         try:
                             session.create_market_order(
@@ -553,6 +567,12 @@ def open_position(signal, user):
                                     'position_idx': 1
                                 }
                             )
+                        print(
+                            f'Position open!\n'
+                            f'User = {user}\n'
+                            f'symbol: {symbol}'
+                        )
+                        print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
             else:
                 pass
     except Exception as e:
