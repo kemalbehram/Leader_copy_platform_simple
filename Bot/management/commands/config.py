@@ -1,4 +1,3 @@
-from fake_useragent import UserAgent, FakeUserAgentError
 # Main network token to pay for a subscription t.me/CryptoBot?start=r-1268434
 token_pay_main = ''
 # Test network token to pay for a subscription https://t.me/CryptoTestnetBot
