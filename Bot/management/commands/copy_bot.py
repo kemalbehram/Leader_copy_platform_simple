@@ -11,7 +11,7 @@ from django.core.management.base import BaseCommand
 from Bot.management.commands.fucn_trader import get_trader_1, open_position, order_close, debug
 from Bot.models import Signal, Traders, Users, Admin
 
-admin = Admin.objects.get(subs_active=True)
+admin = Admin.objects.get(admin=True)
 try:
     token = admin.bot_token  # dev bot token
     my_id = admin.user_id
