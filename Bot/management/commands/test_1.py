@@ -34,6 +34,9 @@ def get_trader_2(trade):
             if pos_response.ok:
                 break
         position = json.loads(pos_response.content)['data']['otherPositionRetList']
+        print(
+            f'Position get from {name}'
+        )
         if len(position) > 0:
             try:
                 for tex in position:
@@ -139,11 +142,10 @@ class Command(BaseCommand):
     help = 'бот'
 
     def handle(self, *args, **options):
-        while True:
-            traders = Traders.objects.all()
+        traders = Traders.objects.all()
 
-            for trade in traders:
-                try:
-                    get_trader_2(trade)
-                except TypeError as e:
-                    print(e)
+        for trade in traders:
+            try:
+                get_trader_2(trade)
+            except TypeError as e:
+                print(e)
