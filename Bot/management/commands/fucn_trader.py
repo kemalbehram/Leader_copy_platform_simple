@@ -15,7 +15,7 @@ from ccxt.base.decimal_to_precision import SIGNIFICANT_DIGITS  # noqa F401
 from ccxt.base.decimal_to_precision import TICK_SIZE  # noqa F401
 from ccxt.base.decimal_to_precision import TRUNCATE  # noqa F401
 from ccxt.base.decimal_to_precision import decimal_to_precision  # noqa F401
-from pybit import HTTP
+# from pybit import HTTP
 
 from Bot.models import Signal, Users
 
