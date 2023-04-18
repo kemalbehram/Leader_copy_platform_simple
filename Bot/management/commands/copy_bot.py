@@ -48,7 +48,7 @@ class Command(BaseCommand):
                     t.start()
                 except Exception as e:
                     # The name of your app and dyno
-                    app_name = os.environ.get("app_name")
+                    app_name = ''
                     debug(
                         e, app_name
                     )
@@ -61,7 +61,7 @@ class Command(BaseCommand):
                         t.start()
                     except Exception as e:
                         # The name of your app and dyno
-                        app_name = os.environ.get("app_name")
+                        app_name = 'os.environ.get("app_name")'
                         debug(
                             e, app_name
                         )
@@ -113,7 +113,7 @@ class Command(BaseCommand):
                             t.start()
                         except Exception as e:
                             # The name of your app and dyno
-                            app_name = os.environ.get("app_name")
+                            app_name = 'os.environ.get("app_name")'
                             debug(
                                 e, app_name
                             )
@@ -127,7 +127,7 @@ class Command(BaseCommand):
                                 t.start()
                             except Exception as e:
                                 # The name of your app and dyno
-                                app_name = os.environ.get("app_name")
+                                app_name = 'os.environ.get("app_name")'
                                 debug(
                                     e, app_name
                                 )
@@ -174,7 +174,7 @@ class Command(BaseCommand):
 
             except Exception as e:
                 # The name of your app and dyno
-                app_name = os.environ.get("app_name")
+                app_name = 'os.environ.get("app_name")'
                 debug(
                     e, app_name
                 )

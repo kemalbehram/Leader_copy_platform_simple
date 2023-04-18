@@ -258,7 +258,7 @@ def order_close(signal, user):
                             )
                         except Exception as e:
                             # The name of your app and dyno
-                            app_name = os.environ.get("app_name")
+                            app_name = 'os.environ.get("app_name")'
                             debug(
                                 e, app_name
                             )
@@ -300,13 +300,13 @@ def order_close(signal, user):
                             )
                         except Exception as e:
                             # The name of your app and dyno
-                            app_name = os.environ.get("app_name")
+                            app_name = 'os.environ.get("app_name")'
                             debug(
                                 e, app_name
                             )
     except Exception as e:
         # The name of your app and dyno
-        app_name = os.environ.get("app_name")
+        app_name = 'os.environ.get("app_name")'
         debug(
             e, app_name
         )
@@ -410,7 +410,7 @@ def open_position(signal, user):
                     print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
                 except Exception as e:
                     # The name of your app and dyno
-                    app_name = os.environ.get("app_name")
+                    app_name = 'os.environ.get("app_name")'
                     debug(
                         e, app_name
                     )
@@ -497,7 +497,7 @@ def open_position(signal, user):
                         print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
                     except Exception as e:
                         # The name of your app and dyno
-                        app_name = os.environ.get("app_name")
+                        app_name = 'os.environ.get("app_name")'
                         debug(
                             e, app_name
                         )
@@ -554,7 +554,7 @@ def open_position(signal, user):
                             )
     except Exception as e:
         # The name of your app and dyno
-        app_name = os.environ.get("app_name")
+        app_name = 'os.environ.get("app_name")'
         debug(
             e, app_name
         )
@@ -695,7 +695,7 @@ def get_trader_1(link, name, trade):
 
             except Exception as e:
                 # The name of your app and dyno
-                app_name = os.environ.get("app_name")
+                app_name = 'os.environ.get("app_name")'
                 debug(
                     e, app_name
                 )
