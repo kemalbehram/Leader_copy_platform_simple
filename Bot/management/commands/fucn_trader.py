@@ -303,6 +303,8 @@ def order_close(signal, user):
                             debug(
                                 e, app_name
                             )
+            else:
+                pass
     except Exception as e:
         # The name of your app and dyno
         app_name = 'os.environ.get("app_name")'
@@ -551,6 +553,8 @@ def open_position(signal, user):
                                     'position_idx': 1
                                 }
                             )
+            else:
+                pass
     except Exception as e:
         # The name of your app and dyno
         app_name = 'os.environ.get("app_name")'
