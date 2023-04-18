@@ -1,5 +1,4 @@
 import json
-import os
 import sys
 from datetime import datetime
 from pprint import pprint
@@ -16,7 +15,7 @@ from ccxt.base.decimal_to_precision import SIGNIFICANT_DIGITS  # noqa F401
 from ccxt.base.decimal_to_precision import TICK_SIZE  # noqa F401
 from ccxt.base.decimal_to_precision import TRUNCATE  # noqa F401
 from ccxt.base.decimal_to_precision import decimal_to_precision  # noqa F401
-from pybit import usdt_perpetual
+from pybit import HTTP
 
 from Bot.models import Signal, Users
 
@@ -77,7 +76,7 @@ def get_count(number):
 
 def pair_list_update():
     api_url = "https://api.bybit.com"  # The API URL
-    session = usdt_perpetual.HTTP(api_url)  # Activates the session
+    session = HTTP(api_url)  # Activates the session
 
     sym_list = []  # The list of symbols
     symbols = session.query_symbol()  # Retrieves all symbols from the API

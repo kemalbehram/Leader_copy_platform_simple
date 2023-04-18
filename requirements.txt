@@ -13,3 +13,4 @@ crypto_pay_api_sdk
 requests
 heroku3
 python-dateutil
+pybit
