@@ -622,7 +622,11 @@ def get_trader_1(link, name, trade):
             #     'cookie': '',  # cookie
             # }
             sleep(2)
-            payload = {'api_key': api, 'url': pos_url}
+            payload = {'api_key': api, 'url': pos_url, "apiParams": {
+                "country_code": "eu",  # // string, see: https://api.scraperapi.com/geo
+                "device_type": "desktop",  # // desktop | mobile
+                "premium": 'true',  # // boolean
+            }, }
 
             pos_response = requests.post('http://api.scraperapi.com', params=payload, json={"encryptedUid": uid,
                                                                                             "tradeType": "PERPETUAL"})
