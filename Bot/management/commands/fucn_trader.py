@@ -413,7 +413,7 @@ def open_position(signal, user):
                     print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
                 except Exception as e:
                     # The name of your app and dyno
-                    app_name = 'os.environ.get("app_name")'
+                    app_name = 'aws copy-trade-leaderboard'
                     debug(
                         e, app_name
                     )
