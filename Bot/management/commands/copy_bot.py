@@ -1,4 +1,3 @@
-import os
 import sys
 import threading
 from datetime import datetime
@@ -85,7 +84,7 @@ class Command(BaseCommand):
 
             # обновляем статус сигналов
             signals.update(status=True)
-            sleep(3)
+            sleep(1)
             # получаем активные ордера
             sig_ord = Signal.objects.filter(is_active=True, status=True)
 
