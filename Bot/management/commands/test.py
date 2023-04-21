@@ -1,34 +1,34 @@
-import telebot
-from telebot.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
+import json
+from pprint import pprint
+from scraper_api import ScraperAPIClient
 
-# здесь нужно указать токен вашего бота, который можно получить у @BotFather в Telegram
-bot = telebot.TeleBot('6084252834:AAGVcipUyC72I1PRsWStjAVXczhejpIZ5Uo')
+import requests
 
-# здесь нужно указать айди чата с администратором, куда будут отправляться фото
-admin_chat_id = 798093480
+link = 'https://www.binance.com/en/futures-activity/leaderboard/user/um?encryptedUid=802118EDADBFD330E6635220BE0A7821'
+uid = link.split('encryptedUid=')[1]
+api = '8df03c1906ff35c53203563774fa3b53'
+# pos_response = requests.post(pos_url, headers=pos_headers,
+#                                          json={"encryptedUid": uid,
+#                                                "tradeType": "PERPETUAL"},
+#                                          timeout=10,
+#                                          proxies=choice(proxies))
+# payload = {'api_key': '',
+#            'url': f'{uid}', 'country_code': 'us'}
+# client = ScraperAPIClient(api)
+# result = client.get(url='http://httpbin.org/ip')
+# print(result)
+# r = requests.post('http://api.scraperapi.com', params=payload, json={"encryptedUid": uid,
+#                                                                      "tradeType": "PERPETUAL"})
+# # print(r.text)
 
+pos_url = 'https://www.binance.com/bapi/futures/v1/public/future/leaderboard/getOtherPosition'
 
-@bot.message_handler(content_types=['photo'])
-def handle_photo(message: Message):
-    # отправляем фото в чат с администратором
-    bot.send_photo(admin_chat_id, message.photo[-1].file_id,
-                   caption=f'Новое фото от пользователя {message.from_user.id}',
-                   reply_markup=create_payment_confirmation_keyboard(message.from_user.id))
-
-
-def create_payment_confirmation_keyboard(user_id: int) -> InlineKeyboardMarkup:
-    # создаем кнопку для подтверждения оплаты с айди пользователя в качестве параметра
-    button = InlineKeyboardButton('Подтвердить оплату', callback_data=f'payment_confirmed:{user_id}')
-    keyboard = InlineKeyboardMarkup().row(button)
-    return keyboard
-
-
-@bot.callback_query_handler(lambda query: query.data.startswith('payment_confirmed:'))
-def handle_payment_confirmation(query):
-    # извлекаем айди пользователя из колбэк данных и отправляем его в чат с администратором
-    user_id = int(query.data.split(':')[1])
-    bot.send_message(admin_chat_id, f'Пользователь {user_id} подтвердил оплату')
+payload = {'api_key': api, 'url': pos_url}
 
 
-# запускаем бота
-bot.polling()
+r = requests.post('http://api.scraperapi.com', params=payload, json={"encryptedUid": uid,
+                                                                     "tradeType": "PERPETUAL"})
+# print(r)
+pprint(
+    json.loads(r.content)
+)

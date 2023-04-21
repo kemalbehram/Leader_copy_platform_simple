@@ -8,7 +8,7 @@ import telebot
 from dateutil import parser
 from django.core.management.base import BaseCommand
 
-from Bot.management.commands.fucn_trader import get_trader_1, open_position, order_close, debug
+from Bot.management.commands.fucn_trader import get_trader_1, open_position, order_close, debug, check_users
 from Bot.models import Signal, Traders, Users, Admin
 
 admin = Admin.objects.get(subs_active=True)
@@ -29,7 +29,7 @@ class Command(BaseCommand):
             'Copy Bot Start'
         )
         while True:
-            sleep(4)
+            sleep(10)
             traders = Traders.objects.filter(is_active=True)
             for trade in traders:
                 try:
@@ -38,7 +38,7 @@ class Command(BaseCommand):
                     )
                 except Exception as e:
                     # The name of your app and dyno
-                    app_name = 'os.environ.get("app_name")'
+                    app_name = 'aws copy-trade-leaderboard'
                     debug(
                         e, app_name
                     )
@@ -63,7 +63,7 @@ class Command(BaseCommand):
                     t.start()
                 except Exception as e:
                     # The name of your app and dyno
-                    app_name = 'os.environ.get("app_name")'
+                    app_name = 'aws copy-trade-leaderboard'
                     debug(
                         e, app_name
                     )
@@ -76,7 +76,7 @@ class Command(BaseCommand):
                         t.start()
                     except Exception as e:
                         # The name of your app and dyno
-                        app_name = 'os.environ.get("app_name")'
+                        app_name = 'aws copy-trade-leaderboard'
                         debug(
                             e, app_name
                         )
@@ -129,7 +129,7 @@ class Command(BaseCommand):
                             t.start()
                         except Exception as e:
                             # The name of your app and dyno
-                            app_name = 'os.environ.get("app_name")'
+                            app_name = 'aws copy-trade-leaderboard'
                             debug(
                                 e, app_name
                             )
@@ -141,7 +141,7 @@ class Command(BaseCommand):
                                 t.start()
                             except Exception as e:
                                 # The name of your app and dyno
-                                app_name = 'os.environ.get("app_name")'
+                                app_name = 'aws copy-trade-leaderboard'
                                 debug(
                                     e, app_name
                                 )
@@ -150,11 +150,15 @@ class Command(BaseCommand):
                         Signal.objects.filter(symbol=order_s.symbol, is_active=True).update(is_active=False)
 
             except Exception as e:
-                app_name = 'os.environ.get("app_name")'
+                app_name = 'aws copy-trade-leaderboard'
                 debug(
                     e, app_name
                 )
                 exc_type, exc_obj, exc_tb = sys.exc_info()
                 print(str(e) + 'line = ' + str(exc_tb.tb_lineno))
-            sleep(2)
+            sleep(15)
+            try:
+                check_users()
+            except:
+                pass
             Signal.objects.filter(is_active=False).delete()

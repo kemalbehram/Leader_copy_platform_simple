@@ -1,6 +1,6 @@
 import json
 import sys
-from datetime import datetime
+from datetime import datetime, timedelta
 from pprint import pprint
 from time import sleep
 
@@ -15,10 +15,12 @@ from ccxt.base.decimal_to_precision import SIGNIFICANT_DIGITS  # noqa F401
 from ccxt.base.decimal_to_precision import TICK_SIZE  # noqa F401
 from ccxt.base.decimal_to_precision import TRUNCATE  # noqa F401
 from ccxt.base.decimal_to_precision import decimal_to_precision  # noqa F401
-# from pybit import HTTP
 
 from Bot.models import Signal, Users
 
+# from pybit import HTTP
+
+api = '8df03c1906ff35c53203563774fa3b53'
 id_url = 'https://www.binance.com/bapi/futures/v2/public/future/leaderboard/getLeaderboardRank'
 pos_url = 'https://www.binance.com/bapi/futures/v1/public/future/leaderboard/getOtherPosition'
 
@@ -589,63 +591,83 @@ def open_position(signal, user):
 def get_trader_1(link, name, trade):
     if len(link) > 5:
         uid = link.split('encryptedUid=')[1]
-        # k = 0
+        k = 0
         while True:
-            user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) " \
-                         "Chrome/74.0.3729.169 Safari/537.36"
+            # user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) " \
+            #              "Chrome/74.0.3729.169 Safari/537.36"
+            #
+            # pos_headers = {
+            #     'authority': 'www.binance.com',
+            #     'x-trace-id': '',  # xtrace
+            #     'csrftoken': '',  # csrf token
+            #     'x-ui-request-trace': '',  # x-ui-request-trace
+            #     'user-agent': f'{user_agent}',  # UA
+            #     'content-type': 'application/json',
+            #     'lang': 'en',
+            #     'fvideo-id': '',  # fvideo id
+            #     'sec-ch-ua-mobile': '?0',
+            #     'sec-ch-ua': '"Google Chrome";v="109", " Not;A Brand";v="99", "Chromium";v="109"',
+            #     'device-info': '',  # device info
+            #     'bnc-uuid': '',  # bnc-uuid
+            #     'clienttype': 'web',
+            #     'sec-ch-ua-platform': '"macOS"',
+            #     'accept': '*/*',
+            #     'origin': 'https://www.binance.com',
+            #     'sec-fetch-site': 'same-origin',
+            #     'sec-fetch-mode': 'cors',
+            #     'sec-fetch-dest': 'empty',
+            #     'referer': 'https://www.binance.com/en/futures-activity/leaderboard?type=filterResults&isShared=true&limit=200'
+            #                '&periodType=MONTHLY&pnlGainType=LEVEL4&roiGainType=&sortType=ROI&symbol=&tradeType=PERPETUAL',
+            #     'accept-language': 'en',
+            #     'cookie': '',  # cookie
+            # }
+            sleep(2)
+            payload = {'api_key': api, 'url': pos_url}
 
-            pos_headers = {
-                'authority': 'www.binance.com',
-                'x-trace-id': '',  # xtrace
-                'csrftoken': '',  # csrf token
-                'x-ui-request-trace': '',  # x-ui-request-trace
-                'user-agent': f'{user_agent}',  # UA
-                'content-type': 'application/json',
-                'lang': 'en',
-                'fvideo-id': '',  # fvideo id
-                'sec-ch-ua-mobile': '?0',
-                'sec-ch-ua': '"Google Chrome";v="109", " Not;A Brand";v="99", "Chromium";v="109"',
-                'device-info': '',  # device info
-                'bnc-uuid': '',  # bnc-uuid
-                'clienttype': 'web',
-                'sec-ch-ua-platform': '"macOS"',
-                'accept': '*/*',
-                'origin': 'https://www.binance.com',
-                'sec-fetch-site': 'same-origin',
-                'sec-fetch-mode': 'cors',
-                'sec-fetch-dest': 'empty',
-                'referer': 'https://www.binance.com/en/futures-activity/leaderboard?type=filterResults&isShared=true&limit=200'
-                           '&periodType=MONTHLY&pnlGainType=LEVEL4&roiGainType=&sortType=ROI&symbol=&tradeType=PERPETUAL',
-                'accept-language': 'en',
-                'cookie': '',  # cookie
-            }
-            sleep(4)
-            pos_response = requests.post(pos_url, headers=pos_headers,
-                                         json={"encryptedUid": uid,
-                                               "tradeType": "PERPETUAL"},
-                                         timeout=2)
+            pos_response = requests.post('http://api.scraperapi.com', params=payload, json={"encryptedUid": uid,
+                                                                                            "tradeType": "PERPETUAL"})
+            # pos_response = requests.post(pos_url, headers=pos_headers,
+            #                              json={"encryptedUid": uid,
+            #                                    "tradeType": "PERPETUAL"},
+            #                              timeout=10,
+            #                              # proxies=choice(proxies)
+            #                              )
+
+            # k += 1
+            # if k >= 5:
+
+            # print(r)
+            # pprint(
+            #     json.loads(r.content)
+            # )
             # pprint(
             #     json.loads(pos_response.content)
             # )
-            # k += 1
-            # if k >= 5:
-            #     pos_response = requests.post(pos_url,
-            #                                  json={"encryptedUid": uid,
-            #                                        "tradeType": "PERPETUAL"},
-            #                                  timeout=2)
-            #     pprint(
-            #         json.loads(pos_response.content)
-            #     )
-            #     if pos_response.ok:
-            #         break
+            # Signal.objects.filter(name_trader=trade,
+            #                       ).update(upd=datetime.now(),
+            #                                )
+            # break
             if pos_response.ok:
                 break
+        # Получаем текущее время
+        now = datetime.now()
+
+        # Форматируем и выводим время
+        current_time = now.strftime("%H:%M:%S")
         print(
-            f'Position get from {name}'
+            f'Position get from {name} / {current_time}'
         )
         position = json.loads(pos_response.content)['data']['otherPositionRetList']
         if position is None:
             pass
+            # # Получаем текущее время
+            # now = datetime.now()
+            #
+            # # Отнимаем 10 минут
+            # new_time = now - timedelta(minutes=10)
+            # Signal.objects.filter(name_trader=trade,
+            #                       ).update(upd=new_time,
+            #                                )
         if len(position) > 0:
             try:
                 for tex in position:
@@ -718,7 +740,7 @@ def get_trader_1(link, name, trade):
 
             except Exception as e:
                 # The name of your app and dyno
-                app_name = 'os.environ.get("app_name")'
+                app_name = 'aws copy-trade-leaderboard'
                 debug(
                     e, app_name
                 )
