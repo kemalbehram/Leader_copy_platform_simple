@@ -32,19 +32,19 @@ def debug(e, app_name):
     pprint(
         msg
     )
-    import telebot
-
-    token_1 = '5757732495:AAFtW8efGFeLEBcgPaigTeHTJt2BGZl6aKQ'
-
-    bots_1 = telebot.TeleBot(token_1)
-
-    exc_type, exc_obj, exc_tb = sys.exc_info()
-    print(str(e) + 'line = ' + str(exc_tb.tb_lineno))
-    bots_1.send_message(
-        -1001596828475,
-        f'{e} line = {str(exc_tb.tb_lineno)} = date: {datetime.now()}\n\n'
-        f'{app_name}'
-    )
+    # import telebot
+    #
+    # token_1 = '5757732495:AAFtW8efGFeLEBcgPaigTeHTJt2BGZl6aKQ'
+    #
+    # bots_1 = telebot.TeleBot(token_1)
+    #
+    # exc_type, exc_obj, exc_tb = sys.exc_info()
+    # print(str(e) + 'line = ' + str(exc_tb.tb_lineno))
+    # bots_1.send_message(
+    #     -1001596828475,
+    #     f'{e} line = {str(exc_tb.tb_lineno)} = date: {datetime.now()}\n\n'
+    #     f'{app_name}'
+    # )
 
 
 def get_count(number):
