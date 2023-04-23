@@ -11,13 +11,13 @@ from Bot.management.commands.fucn_trader import get_trader_1, open_position, ord
 from Bot.models import Signal, Traders, Users, Admin
 
 admin = Admin.objects.get(subs_active=True)
-try:
-    token = admin.bot_token  # dev bot token
-    my_id = admin.user_id
-
-    bots = telebot.TeleBot(token)
-except:
-    pass
+# try:
+#     token = admin.bot_token  # dev bot token
+#     my_id = admin.user_id
+#
+#     bots = telebot.TeleBot(token)
+# except:
+#     pass
 
 
 class Command(BaseCommand):
@@ -51,12 +51,12 @@ class Command(BaseCommand):
             users = Users.objects.filter(subs_active=True)
             for signal in signals:
                 sleep(0.3)
-                try:
-                    bots.send_message(
-                        my_id, signal.message, parse_mode='HTML'
-                    )
-                except:
-                    pass
+                # try:
+                #     bots.send_message(
+                #         my_id, signal.message, parse_mode='HTML'
+                #     )
+                # except:
+                #     pass
                 try:
                     t = threading.Thread(target=open_position, args=(signal, admin))
                     t.start()
@@ -108,10 +108,10 @@ class Command(BaseCommand):
                                   f'🔵Trade: <b>BUY</b> (LONG)\n\n' \
                                   f'📊Marketprice: <b>{order_s.mark_price}</b>\n' \
                                   f'💹PNL: <b>{round(float(order_s.roe), 2)}%</b>\n\n'
-                            try:
-                                bots.send_message(my_id, msg, parse_mode='HTML')
-                            except:
-                                pass
+                            # try:
+                            #     # bots.send_message(my_id, msg, parse_mode='HTML')
+                            # except:
+                            #     pass
                         else:
                             msg = f'<b>📳 TRADE CLOSED 📳</b>\n\n' \
                                   f'🥷🏾Trader: <b>{order_s.name_trader}</b>\n' \
@@ -119,10 +119,10 @@ class Command(BaseCommand):
                                   f'🔴Trade: <b>Sell</b> (SHORT)\n\n' \
                                   f'📊Marketprice: <b>{order_s.mark_price}</b>\n' \
                                   f'💹PNL: <b>{round(float(order_s.roe), 2)}%</b>\n\n'
-                            try:
-                                bots.send_message(my_id, msg, parse_mode='HTML')
-                            except:
-                                pass
+                            # try:
+                            #     bots.send_message(my_id, msg, parse_mode='HTML')
+                            # except:
+                            #     pass
                         try:
                             t = threading.Thread(target=order_close, args=(order_s, admin))
                             t.start()
