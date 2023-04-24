@@ -181,42 +181,6 @@ def add_bybit_api(message):
             msg = f'Something went wrong! Try again later or make sure you entered it correctly!'
 
         bot.send_message(chat_id, msg, parse_mode='html')
-    # user_id = message.from_user.id
-    # chat_id = message.chat.id
-    #
-    # language = Users.objects.get(user_id=user_id).language
-    # # user_name = message.from_user.username
-    # link = str(message.text).split(',')
-    # api_key = str(link[0]).replace(' ', '')
-    # api_secret = str(link[1]).replace(' ', '')
-    # session = ccxt.bybit(
-    #     {
-    #         "apiKey": api_key,
-    #         "secret": api_secret,
-    #         "enableRateLimit": True,
-    #         'timeout': 30000,
-    #     }
-    # )
-    # msg = ''
-    #
-    # try:
-    #     session.fetch_balance()
-    #     if language == 'ru':
-    #         msg = f'Биржа успешно подключена'
-    #     elif language == 'en':
-    #         msg = f'Exchange successfully connected'
-    #     Users.objects.filter(user_id=user_id).update(
-    #         api_key=api_key,
-    #         api_secret=api_secret,
-    #         exchange='Bybit'
-    #     )
-    # except:
-    #     if language == 'ru':
-    #         msg = f'Что-то пошло не так проверьте свои апи и попробуйте снова'
-    #     elif language == 'en':
-    #         msg = f'Something went wrong check your api and try again'
-    #
-    # bot.send_message(chat_id, msg, parse_mode='html', reply_markup=gen_markup())
 
 
 def gen_markup():
@@ -480,7 +444,7 @@ def callback_inline(call):
         inline_keyboard = [
             [
                 types.InlineKeyboardButton("Binance", callback_data='Binance'),
-                types.InlineKeyboardButton("Bybit", callback_data='Bybit'),
+                # types.InlineKeyboardButton("Bybit", callback_data='Bybit'),
                 types.InlineKeyboardButton("Back", callback_data='Back')
 
             ]
