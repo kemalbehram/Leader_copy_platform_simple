@@ -483,7 +483,7 @@ def callback_inline(call):
         language = user.language
         balance = user.balance
         msg = ''
-        count_ref = len(user.referral)
+        count_ref = len(Users.objects.filter(referral=user))
 
         link = f'https://t.me/{bot_name}?start={call.message.chat.id}'
         if language == 'ru':
