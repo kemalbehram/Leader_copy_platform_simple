@@ -479,7 +479,7 @@ def callback_inline(call):
         # bot.send_message(call.message.chat.id, msg, reply_markup=reply_markup, parse_mode='html')
     # создание и обработка рефералов
     if call.data == 'Referral':
-        user = Users.objects.select_related('language').prefetch_related('referral').get(user_id=call.message.chat.id)
+        user = Users.objects.get(user_id=call.message.chat.id)
         language = user.language.language
         balance = user.balance
         msg = ''
