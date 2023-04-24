@@ -363,14 +363,16 @@ def callback_inline(call):
                   f'Ваша реферальная ссылка {link}\n\n' \
                   f'За каждого активного реферала вы получаете {cashback} USD кэшбек от оплаты подписки!\n' \
                   f'Ваш баланс: {balance} USDT\n' \
-                  f'Чтобы получить выплату напишите администратору @{admin_name}'
+                  f'Чтобы получить выплату напишите администратору @{admin_name}\n' \
+                  f'Минимальная сумма выплаты от 50 долларов!'
 
         elif language == 'en':
             msg = f'You have {count_ref} referrals\n\n' \
                   f'Your referral link {link}\n\n' \
                   f'For each active referral you get {cashback} USD cashback on subscription fees!\n' \
                   f'Your Balance: {balance} USDT\n' \
-                  f'To receive a payout write the administrator @{admin_name}'
+                  f'To receive a payout write the administrator @{admin_name}\n' \
+                  f'Minimum amount of payments from 50 dollars!'
 
         reply_markup = types.InlineKeyboardMarkup()
         reply_markup.row_width = width
