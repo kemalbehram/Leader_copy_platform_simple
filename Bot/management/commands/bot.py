@@ -9,14 +9,15 @@ from django.core.management.base import BaseCommand
 from telebot import types
 from telebot.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 
-from Bot.management.commands.config import token, width, bot_name, vip_cost, pay_adres, network, cashback
+from Bot.management.commands.config import token, width, bot_name, vip_cost, pay_adres, network, cashback, \
+    pay_adres_1, network_1
 from Bot.models import Users
 
 
 bot = telebot.TeleBot(token)
 
 bot.delete_webhook()
-admin_chat_id = 0
+admin_chat_id = 6291876932
 
 
 def add_balance(message):
@@ -335,21 +336,21 @@ def callback_inline(call):
         msg = ''
         if language == 'ru':
             if user.subs_active:
-                msg = f'Ваша подписка {user.subscription_type} активна до {user.subs_date_end}:'
+                msg = f'Ваша подписка активна до {user.subs_date_end}:'
             else:
-                msg = f'Ваша подписка {user.subscription_type} не активна!! Обновите её скорее!!:'
+                msg = f'Ваша подписка не активна!! Обновите её скорее!!:'
 
         elif language == 'en':
             if user.subs_active:
-                msg = f'Your {user.subscription_type} is active until {user.subs_date_end}:'
+                msg = f'Your is active until {user.subs_date_end}:'
             else:
-                msg = f'Your subscription {user.subscription_type} is not active!!! Update it soon!!!:'
+                msg = f'Your subscription  is not active!!! Update it soon!!!:'
 
         reply_markup = types.InlineKeyboardMarkup()
         reply_markup.row_width = 1
         reply_markup.add(
             # types.InlineKeyboardButton("🥉Basic", callback_data='Ordinary'),
-            types.InlineKeyboardButton("🥇VIP", callback_data='VIP'),
+            types.InlineKeyboardButton("🥇Buy Subscription", callback_data='VIP'),
             # types.InlineKeyboardButton("🥈Standard", callback_data='Standard'),
             types.InlineKeyboardButton("🔙Back", callback_data='Back')
         )
@@ -386,13 +387,13 @@ def callback_inline(call):
         if language == 'ru':
             msg = f'У вас {count_ref} рефералов\n\n' \
                   f'Ваша реферальная ссылка {link}\n\n' \
-                  f'За каждого активного реферала вы получаете {cashback}% кэшбек от оплаты подписки!\n' \
+                  f'За каждого активного реферала вы получаете {cashback} USD кэшбек от оплаты подписки!\n' \
                   f'Ваш баланс: {balance} USDT'
 
         elif language == 'en':
             msg = f'You have {count_ref} referrals\n\n' \
                   f'Your referral link {link}\n\n' \
-                  f'For each active referral you get {cashback}% cashback on subscription fees!\n' \
+                  f'For each active referral you get {cashback} USD cashback on subscription fees!\n' \
                   f'Your Balance: {balance} USDT'
 
         reply_markup = types.InlineKeyboardMarkup()
@@ -432,9 +433,9 @@ def callback_inline(call):
         # user = Users.objects.get(user_id=call.message.chat.id)
         msg = ''
         if language == 'ru':
-            msg = f'Стоимость подписки VIP в месяц {vip_cost} USDT\n\n'
+            msg = f'Стоимость подписки в месяц {vip_cost} USDT\n\n'
         elif language == 'en':
-            msg = f'The cost of the VIP subscription per month is {vip_cost} USDT\n\n'
+            msg = f'The cost of the subscription per month is {vip_cost} USDT\n\n'
 
         reply_markup = types.InlineKeyboardMarkup()
         reply_markup.row_width = 3
@@ -512,14 +513,18 @@ def callback_inline(call):
         subs_cost = vip_cost  # (vip_cost - (subs_discount * vip_cost / 100)) * 1
         msg = ''
         if language == 'ru':
-            msg = f'К оплате {subs_cost} USDT:\n' \
+            msg = f'К оплате {subs_cost} USDT or BUSD:\n' \
                   f'Произведите оплату на этот адрес <code>{pay_adres}</code>\n' \
                   f'СЕТЬ: {network}\n' \
+                  f'Произведите оплату на этот адрес <code>{pay_adres_1}</code>\n' \
+                  f'СЕТЬ: {network_1}\n' \
                   f'После оплаты пришлите скриншот сюда для подтверждения оплаты'
         elif language == 'en':
-            msg = f'Price {subs_cost} USDT:\n' \
+            msg = f'Price {subs_cost} USDT or BUSD:\n' \
                   f'Pay to this address <code>{pay_adres}</code>\n' \
                   f'Network: {network}\n' \
+                  f'Pay to this address <code>{pay_adres_1}</code>\n' \
+                  f'Network: {network_1}\n' \
                   f'After payment, send a screenshot here to confirm payment'
 
         # invoice = Crypto.createInvoice("USDT", f'{subs_cost}', params={"description": "1vip",
@@ -953,9 +958,9 @@ def callback_inline(call):
         language = Users.objects.get(user_id=call.message.chat.id).language
         msg = ''
         if language == 'ru':
-            msg = f'Пришлите мне ваши апи ключ и секретный ключ через кому (api_key, api_secret):'
+            msg = f'Пришлите мне ваши апи ключ и секретный ключ через кому api_key, api_secret:'
         elif language == 'en':
-            msg = f'Send me your api key and secret key via coma (api_key, api_secret):'
+            msg = f'Send me your api key and secret key via coma api_key, api_secret:'
 
         mesag = bot.send_message(chat_id=call.message.chat.id, text=msg)
 
@@ -965,9 +970,9 @@ def callback_inline(call):
         language = Users.objects.get(user_id=call.message.chat.id).language
         msg = ''
         if language == 'ru':
-            msg = f'Пришлите мне ваши апи ключ и секретный ключ через кому (api_key, api_secret):'
+            msg = f'Пришлите мне ваши апи ключ и секретный ключ через кому api_key, api_secret:'
         elif language == 'en':
-            msg = f'Send me your api key and secret key via coma (api_key, api_secret):'
+            msg = f'Send me your api key and secret key via coma api_key, api_secret:'
 
         mesag = bot.send_message(chat_id=call.message.chat.id, text=msg)
 
@@ -1320,7 +1325,7 @@ def handle_payment_confirmation(query):
     user = Users.objects.get(user_id=user_id)
     try:
         ref = Users.objects.get(user_id=user.reffrel.id)
-        ref_cashback = vip_cost * cashback
+        ref_cashback = cashback
         bal = ref.balance
         Users.objects.filter(user_id=user.reffrel.id).update(
             balance=bal + ref_cashback

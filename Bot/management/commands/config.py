@@ -6,15 +6,15 @@ token_test_pay = ''
 info_url = 'https://www.binance.com/bapi/futures/v2/public/future/leaderboard/getOtherLeaderboardBaseInfo'
 width = 2
 
-test = True
+test = False
 if test:
     token_pay = token_test_pay
     # test telegram token
-    token = '6084252834'
+    token = '5817843241:AAH5B89odTTPwxnFGdqTfWGv8wzuD20_dP0 '
 else:
     token_pay = token_pay_main
     # Main telegram token
-    token = '5850680399'
+    token = '5817843241:AAH5B89odTTPwxnFGdqTfWGv8wzuD20_dP0 '
 
 
 # try:
@@ -49,13 +49,15 @@ pos_headers = {
     'accept-language': 'en',
     'cookie': '',  # cookie
 }
-pay_adres = ''
-network = ''
-cashback = 0.02
+pay_adres = '0x6C08125Ac747eFbD907807FDa1128823D4Cf3dBb'
+network = 'BUSD Bep20'
+pay_adres_1 = 'TX9akUcQpKddzV5DE9kS8bVwNbzfEfUgDo'
+network_1 = 'Usdt trc20'
+cashback = 5
 # name your telegram bot
 bot_name = 'asdhiahsdaihs_bot'
 # subscription price
-vip_cost = 75
+vip_cost = 25
 # ordinary_cost = 25
 # standard_cost = 35
 # subscription discount

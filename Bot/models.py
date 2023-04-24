@@ -47,7 +47,7 @@ class Users(models.Model):
     user_name = models.CharField(max_length=25, verbose_name='Name User')
     user_id = models.CharField(max_length=30, verbose_name='User ID in Telegram', unique=True)
 
-    # balance = models.FloatField(default=0, verbose_name='User balance {cashback}')
+    balance = models.FloatField(default=0, verbose_name='User balance {cashback}')
     subs_date_end = models.DateField(null=True, verbose_name='Subscription end', blank=True)
     subs_active = models.BooleanField(default=False,
                                       verbose_name='If the subscription is active then true if not false')
@@ -62,7 +62,7 @@ class Users(models.Model):
         ]
     )
 
-    # referral = models.ForeignKey('Users', on_delete=models.CASCADE, blank=True, default=None, null=True)
+    referral = models.ForeignKey('Users', on_delete=models.CASCADE, blank=True, default=None, null=True)
 
     api_key = models.CharField(max_length=350, verbose_name='Exchange api key', blank=True)
     api_secret = models.CharField(max_length=350, verbose_name='Exchange api secret', blank=True)
