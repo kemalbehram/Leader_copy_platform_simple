@@ -19,7 +19,7 @@ Crypto = cryptopay.Crypto(token_pay)
 bot = telebot.TeleBot(token)
 
 bot.delete_webhook()
-admin_chat_id = 6291876932
+# admin_chat_id = 6291876932
 
 
 def add_balance(message):
@@ -364,7 +364,7 @@ def callback_inline(call):
                   f'За каждого активного реферала вы получаете {cashback} USD кэшбек от оплаты подписки!\n' \
                   f'Ваш баланс: {balance} USDT\n' \
                   f'Чтобы получить выплату напишите администратору @{admin_name}\n' \
-                  f'Минимальная сумма выплаты от 50 долларов!'
+                  f'Минимальная сумма выплаты от 10 долларов!'
 
         elif language == 'en':
             msg = f'You have {count_ref} referrals\n\n' \
@@ -372,7 +372,7 @@ def callback_inline(call):
                   f'For each active referral you get {cashback} USD cashback on subscription fees!\n' \
                   f'Your Balance: {balance} USDT\n' \
                   f'To receive a payout write the administrator @{admin_name}\n' \
-                  f'Minimum amount of payments from 50 dollars!'
+                  f'Minimum amount of payments from 10 dollars!'
 
         reply_markup = types.InlineKeyboardMarkup()
         reply_markup.row_width = width
@@ -413,7 +413,7 @@ def callback_inline(call):
         reply_markup.add(
             types.InlineKeyboardButton("📅1 month", callback_data='1vip'),
             types.InlineKeyboardButton("📅3 month", callback_data='3vip'),
-            types.InlineKeyboardButton("📅7 month", callback_data='7vip'),
+            types.InlineKeyboardButton("📅6 month", callback_data='7vip'),
             types.InlineKeyboardButton("🔙Back", callback_data='Back')
         )
         bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=msg,
@@ -449,7 +449,7 @@ def callback_inline(call):
                               reply_markup=reply_markup, parse_mode='html')
     if call.data == '3vip':
         language = Users.objects.get(user_id=call.message.chat.id).language
-        subs_cost = vip_cost * 3  # (vip_cost - (subs_discount * vip_cost / 100)) * 3
+        subs_cost = 70  # (vip_cost - (subs_discount * vip_cost / 100)) * 3
         msg = ''
         if language == 'ru':
             msg = f'К оплате {subs_cost} USDT:\n'
@@ -477,7 +477,7 @@ def callback_inline(call):
                               reply_markup=reply_markup, parse_mode='html')
     if call.data == '7vip':
         language = Users.objects.get(user_id=call.message.chat.id).language
-        subs_cost = vip_cost * 7  # (vip_cost - (subs_discount * vip_cost / 100)) * 7
+        subs_cost = 125  # (vip_cost - (subs_discount * vip_cost / 100)) * 7
         msg = ''
         if language == 'ru':
             msg = f'К оплате {subs_cost} USDT:\n'
@@ -708,7 +708,7 @@ def callback_inline(call):
                         except Users.DoesNotExist:
                             print('User dont have referral')
                         # Добавляем 30 дней
-                        delta = datetime.timedelta(days=210)
+                        delta = datetime.timedelta(days=180)
                         future_date = today + delta
 
                         language = user.language
@@ -736,12 +736,11 @@ def send_welcome(message):
     user_id = message.from_user.id
     chat_id = message.chat.id
     user_name = message.from_user.username
-    en = ''
-    ru = ''
+    # en = ''
+    # ru = ''
 
     referral = str(message.text).replace('/start', '')
 
-    # if len(referral) > 1 and referral != user_id:
     try:
         Users.objects.get(
             user_name=user_name,
