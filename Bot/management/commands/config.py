@@ -1,7 +1,7 @@
 # Main network token to pay for a subscription t.me/CryptoBot?start=r-1268434
-token_pay_main = ''
+token_pay_main = '97754:AA9SleQI44sdE3AZONIQkgWMrm4HM4TzIYk'
 # Test network token to pay for a subscription https://t.me/CryptoTestnetBot
-token_test_pay = ''
+token_test_pay = '97754:AA9SleQI44sdE3AZONIQkgWMrm4HM4TzIYk'
 
 info_url = 'https://www.binance.com/bapi/futures/v2/public/future/leaderboard/getOtherLeaderboardBaseInfo'
 width = 2
