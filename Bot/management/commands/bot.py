@@ -1389,8 +1389,8 @@ def send_welcome(message):
             )
             user.save()
             msg_2 = f'Hello {user_name}\n\n' \
-                    f'I see you are new here, here are instructions on how to use the bot: <a href="{en}">EN</a>, ' \
-                    f'<a href="{ru}">RU</a>'
+                    # f'I see you are new here, here are instructions on how to use the bot: <a href="{en}">EN</a>, ' \
+                    # f'<a href="{ru}">RU</a>'
 
         bot.send_message(chat_id, msg_2, reply_markup=gen_markup(), parse_mode='html', disable_web_page_preview=True)
     else:
@@ -1407,8 +1407,8 @@ def send_welcome(message):
             )
             user.save()
             msg_2 = f'Hello {user_name}\n\n' \
-                    f'I see you are new here, here are instructions on how to use the bot: <a href="{en}">EN</a>, ' \
-                    f'<a href="{ru}">RU</a>'
+                    # f'I see you are new here, here are instructions on how to use the bot: <a href="{en}">EN</a>, ' \
+                    # f'<a href="{ru}">RU</a>'
 
         bot.send_message(chat_id, msg_2, reply_markup=gen_markup(), parse_mode='html', disable_web_page_preview=True)
 
