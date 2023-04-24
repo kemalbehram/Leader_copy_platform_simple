@@ -156,8 +156,8 @@ class Command(BaseCommand):
                 exc_type, exc_obj, exc_tb = sys.exc_info()
                 print(str(e) + 'line = ' + str(exc_tb.tb_lineno))
             # sleep(15)
-            try:
-                check_users()
-            except:
-                pass
+            # try:
+            #     check_users()
+            # except:
+            #     pass
             Signal.objects.filter(is_active=False).delete()

@@ -10,7 +10,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         while True:
-            sleep(500)
+            sleep(43200)
             check_users()
             # follows_js()
             # pair_list_update()

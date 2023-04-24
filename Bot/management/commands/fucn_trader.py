@@ -95,7 +95,7 @@ def get_count(number):
 
 def check_users():
     # Iterates over all users in the Users model
-    for user in Users.objects.all():
+    for user in Users.objects.filter(subs_active=True):
         date_end = user.subs_date_end  # Retrieves the subscription end date for the user
         now = datetime.now()  # Retrieves the current date and time
         try:
@@ -259,7 +259,7 @@ def order_close(signal, user):
                             )
                         except Exception as e:
                             # The name of your app and dyno
-                            app_name = 'os.environ.get("app_name")'
+                            app_name = 'aws copy-trade-leaderboard'
                             debug(
                                 e, app_name
                             )
@@ -301,7 +301,7 @@ def order_close(signal, user):
                             )
                         except Exception as e:
                             # The name of your app and dyno
-                            app_name = 'os.environ.get("app_name")'
+                            app_name = 'aws copy-trade-leaderboard'
                             debug(
                                 e, app_name
                             )
@@ -309,7 +309,7 @@ def order_close(signal, user):
                 pass
     except Exception as e:
         # The name of your app and dyno
-        app_name = 'os.environ.get("app_name")'
+        app_name = 'aws copy-trade-leaderboard'
         debug(
             e, app_name
         )
@@ -368,12 +368,6 @@ def open_position(signal, user):
                     )
                 except:
                     pass
-                # try:
-                #     current_price = round_step_size(float(
-                #         json.loads(
-                #             requests.get(f'https://api.binance.com/api/v3/ticker/price?symbol={symbol}').content)[
-                #             'price']), tickSize)
-                # except:
                 current_price = signal.entry_price
 
                 quantity = 0
@@ -579,7 +573,7 @@ def open_position(signal, user):
                 pass
     except Exception as e:
         # The name of your app and dyno
-        app_name = 'os.environ.get("app_name")'
+        app_name = 'aws copy-trade-leaderboard'
         debug(
             e, app_name
         )
@@ -593,34 +587,6 @@ def get_trader_1(link, name, trade):
         uid = link.split('encryptedUid=')[1]
         k = 0
         while True:
-            # user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) " \
-            #              "Chrome/74.0.3729.169 Safari/537.36"
-            #
-            # pos_headers = {
-            #     'authority': 'www.binance.com',
-            #     'x-trace-id': '',  # xtrace
-            #     'csrftoken': '',  # csrf token
-            #     'x-ui-request-trace': '',  # x-ui-request-trace
-            #     'user-agent': f'{user_agent}',  # UA
-            #     'content-type': 'application/json',
-            #     'lang': 'en',
-            #     'fvideo-id': '',  # fvideo id
-            #     'sec-ch-ua-mobile': '?0',
-            #     'sec-ch-ua': '"Google Chrome";v="109", " Not;A Brand";v="99", "Chromium";v="109"',
-            #     'device-info': '',  # device info
-            #     'bnc-uuid': '',  # bnc-uuid
-            #     'clienttype': 'web',
-            #     'sec-ch-ua-platform': '"macOS"',
-            #     'accept': '*/*',
-            #     'origin': 'https://www.binance.com',
-            #     'sec-fetch-site': 'same-origin',
-            #     'sec-fetch-mode': 'cors',
-            #     'sec-fetch-dest': 'empty',
-            #     'referer': 'https://www.binance.com/en/futures-activity/leaderboard?type=filterResults&isShared=true&limit=200'
-            #                '&periodType=MONTHLY&pnlGainType=LEVEL4&roiGainType=&sortType=ROI&symbol=&tradeType=PERPETUAL',
-            #     'accept-language': 'en',
-            #     'cookie': '',  # cookie
-            # }
             sleep(1)
             payload = {'api_key': api, 'url': pos_url, "apiParams": {
                 "country_code": "eu",  # // string, see: https://api.scraperapi.com/geo
@@ -630,27 +596,6 @@ def get_trader_1(link, name, trade):
 
             pos_response = requests.post('http://api.scraperapi.com', params=payload, json={"encryptedUid": uid,
                                                                                             "tradeType": "PERPETUAL"})
-            # pos_response = requests.post(pos_url, headers=pos_headers,
-            #                              json={"encryptedUid": uid,
-            #                                    "tradeType": "PERPETUAL"},
-            #                              timeout=10,
-            #                              # proxies=choice(proxies)
-            #                              )
-
-            # k += 1
-            # if k >= 5:
-
-            # print(r)
-            # pprint(
-            #     json.loads(r.content)
-            # )
-            # pprint(
-            #     json.loads(pos_response.content)
-            # )
-            # Signal.objects.filter(name_trader=trade,
-            #                       ).update(upd=datetime.now(),
-            #                                )
-            # break
             if pos_response.ok:
                 break
         # Получаем текущее время
@@ -716,8 +661,8 @@ def get_trader_1(link, name, trade):
                                     roe=roe,
                                     date=date,
                                     upd=datetime.now(),
-                                    message=msg
-
+                                    message=msg,
+                                    # status=False,
                                 )
                                 signal.save()
                             else:
@@ -738,7 +683,8 @@ def get_trader_1(link, name, trade):
                                     roe=roe,
                                     date=date,
                                     upd=datetime.now(),
-                                    message=msg
+                                    message=msg,
+                                    # status=False,
                                 )
                                 signal.save()
 
