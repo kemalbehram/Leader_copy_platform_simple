@@ -10,7 +10,7 @@ from telebot import types
 from telebot.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 
 from Bot.management.commands.config import token, width, bot_name, vip_cost, pay_adres, network, cashback, \
-    pay_adres_1, network_1
+    pay_adres_1, network_1, admin_name
 from Bot.models import Users
 
 
@@ -388,13 +388,15 @@ def callback_inline(call):
             msg = f'У вас {count_ref} рефералов\n\n' \
                   f'Ваша реферальная ссылка {link}\n\n' \
                   f'За каждого активного реферала вы получаете {cashback} USD кэшбек от оплаты подписки!\n' \
-                  f'Ваш баланс: {balance} USDT'
+                  f'Ваш баланс: {balance} USDT\n' \
+                  f'Чтобы получить выплату напишите администратору @{admin_name}'
 
         elif language == 'en':
             msg = f'You have {count_ref} referrals\n\n' \
                   f'Your referral link {link}\n\n' \
                   f'For each active referral you get {cashback} USD cashback on subscription fees!\n' \
-                  f'Your Balance: {balance} USDT'
+                  f'Your Balance: {balance} USDT\n' \
+                  f'To receive a payout write the administrator @{admin_name}'
 
         reply_markup = types.InlineKeyboardMarkup()
         reply_markup.row_width = width
@@ -513,18 +515,18 @@ def callback_inline(call):
         subs_cost = vip_cost  # (vip_cost - (subs_discount * vip_cost / 100)) * 1
         msg = ''
         if language == 'ru':
-            msg = f'К оплате {subs_cost} USDT or BUSD:\n' \
+            msg = f'К оплате {subs_cost} USDT or BUSD:\n\n' \
                   f'Произведите оплату на этот адрес <code>{pay_adres}</code>\n' \
-                  f'СЕТЬ: {network}\n' \
+                  f'СЕТЬ: {network}\n\n' \
                   f'Произведите оплату на этот адрес <code>{pay_adres_1}</code>\n' \
-                  f'СЕТЬ: {network_1}\n' \
+                  f'СЕТЬ: {network_1}\n\n' \
                   f'После оплаты пришлите скриншот сюда для подтверждения оплаты'
         elif language == 'en':
-            msg = f'Price {subs_cost} USDT or BUSD:\n' \
+            msg = f'Price {subs_cost} USDT or BUSD:\n\n' \
                   f'Pay to this address <code>{pay_adres}</code>\n' \
-                  f'Network: {network}\n' \
+                  f'Network: {network}\n\n' \
                   f'Pay to this address <code>{pay_adres_1}</code>\n' \
-                  f'Network: {network_1}\n' \
+                  f'Network: {network_1}\n\n' \
                   f'After payment, send a screenshot here to confirm payment'
 
         # invoice = Crypto.createInvoice("USDT", f'{subs_cost}', params={"description": "1vip",

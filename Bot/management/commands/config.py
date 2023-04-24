@@ -54,8 +54,9 @@ network = 'BUSD Bep20'
 pay_adres_1 = 'TX9akUcQpKddzV5DE9kS8bVwNbzfEfUgDo'
 network_1 = 'Usdt trc20'
 cashback = 5
+admin_name = 'Mazbojim'
 # name your telegram bot
-bot_name = 'asdhiahsdaihs_bot'
+bot_name = 'TradewithAI_bot'
 # subscription price
 vip_cost = 25
 # ordinary_cost = 25
