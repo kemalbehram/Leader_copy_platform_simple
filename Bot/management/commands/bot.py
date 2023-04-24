@@ -25,23 +25,32 @@ def add_balance(message):
     chat_id = message.chat.id
 
     language = Users.objects.get(user_id=user_id).language
-    # user_name = message.from_user.username
-    link = int(message.text)
-    if link > 100:
-        link = 100
-    if link < 1:
-        link = 1
-    Users.objects.filter(user_id=user_id).update(
-        percent_balance=int(link)
-    )
-    msg = f''
+    try:
+        # user_name = message.from_user.username
+        link = int(message.text)
+        if link > 100:
+            link = 100
+        if link < 1:
+            link = 1
+        Users.objects.filter(user_id=user_id).update(
+            percent_balance=int(link)
+        )
+        msg = f''
 
-    if language == 'ru':
-        msg = f'Процент от баланса успешно изменено'
-    elif language == 'en':
-        msg = f'Percentage of balance successfully changed'
+        if language == 'ru':
+            msg = f'Процент от баланса успешно изменено'
+        elif language == 'en':
+            msg = f'Percentage of balance successfully changed'
 
-    bot.send_message(chat_id, msg, parse_mode='html')
+        bot.send_message(chat_id, msg, parse_mode='html')
+    except:
+        msg = ''
+        if language == 'ru':
+            msg = f'Что-то пошло не так! Попробуйте позже или проверьте правильность ввода!'
+        elif language == 'en':
+            msg = f'Something went wrong! Try again later or make sure you entered it correctly!'
+
+        bot.send_message(chat_id, msg, parse_mode='html')
 
 
 def add_leverage(message):
@@ -49,19 +58,28 @@ def add_leverage(message):
     chat_id = message.chat.id
 
     language = Users.objects.get(user_id=user_id).language
-    # user_name = message.from_user.username
-    link = str(message.text)
-    Users.objects.filter(user_id=user_id).update(
-        leverage=int(link)
-    )
-    msg = f'Кредитное плече успешно изменено'
-
-    if language == 'ru':
+    try:
+        # user_name = message.from_user.username
+        link = str(message.text)
+        Users.objects.filter(user_id=user_id).update(
+            leverage=int(link)
+        )
         msg = f'Кредитное плече успешно изменено'
-    elif language == 'en':
-        msg = f'Leverage has been successfully changed'
 
-    bot.send_message(chat_id, msg, parse_mode='html')
+        if language == 'ru':
+            msg = f'Кредитное плече успешно изменено'
+        elif language == 'en':
+            msg = f'Leverage has been successfully changed'
+
+        bot.send_message(chat_id, msg, parse_mode='html')
+    except:
+        msg = ''
+        if language == 'ru':
+            msg = f'Что-то пошло не так! Попробуйте позже или проверьте правильность ввода!'
+        elif language == 'en':
+            msg = f'Something went wrong! Try again later or make sure you entered it correctly!'
+
+        bot.send_message(chat_id, msg, parse_mode='html')
 
 
 def add_binance_api(message):
@@ -69,43 +87,51 @@ def add_binance_api(message):
     chat_id = message.chat.id
 
     language = Users.objects.get(user_id=user_id).language
-    # user_name = message.from_user.username
-    link = str(message.text).split(',')
-    api_key = str(link[0]).replace(' ', '')
-    api_secret = str(link[1]).replace(' ', '')
-    session = ccxt.binance(
-        {
-            "apiKey": api_key,
-            "secret": api_secret,
-        }
-    )
-    result = ''
-
     try:
-        session.fetch_balance()
-        result = 'success'
-        Users.objects.filter(user_id=user_id).update(
-            api_key=api_key,
-            api_secret=api_secret,
-            exchange='Binance'
+        # user_name = message.from_user.username
+        link = str(message.text).split(',')
+        api_key = str(link[0]).replace(' ', '')
+        api_secret = str(link[1]).replace(' ', '')
+        session = ccxt.binance(
+            {
+                "apiKey": api_key,
+                "secret": api_secret,
+            }
         )
-    except:
-        result = 'error'
+        result = ''
 
-    messages = {
-        'ru': {
-            'success': 'Биржа успешно подключена',
-            'error': 'Что-то пошло не так проверьте свои апи и попробуйте снова'
-        },
-        'en': {
-            'success': 'Exchange successfully connected',
-            'error': 'Something went wrong check your api and try again'
+        try:
+            session.fetch_balance()
+            result = 'success'
+            Users.objects.filter(user_id=user_id).update(
+                api_key=api_key,
+                api_secret=api_secret,
+                exchange='Binance'
+            )
+        except:
+            result = 'error'
+
+        messages = {
+            'ru': {
+                'success': 'Биржа успешно подключена',
+                'error': 'Что-то пошло не так проверьте свои апи и попробуйте снова'
+            },
+            'en': {
+                'success': 'Exchange successfully connected',
+                'error': 'Something went wrong check your api and try again'
+            }
         }
-    }
 
-    msg = messages[language][result]
-    bot.send_message(chat_id, msg, parse_mode='html', reply_markup=gen_markup())
+        msg = messages[language][result]
+        bot.send_message(chat_id, msg, parse_mode='html', reply_markup=gen_markup())
+    except:
+        msg = ''
+        if language == 'ru':
+            msg = f'Что-то пошло не так! Попробуйте позже или проверьте правильность ввода!'
+        elif language == 'en':
+            msg = f'Something went wrong! Try again later or make sure you entered it correctly!'
 
+        bot.send_message(chat_id, msg, parse_mode='html')
     # user_id = message.from_user.id
     # chat_id = message.chat.id
     #
@@ -148,38 +174,45 @@ def add_bybit_api(message):
 
     user = Users.objects.get(user_id=user_id)
     language = user.language
-
-    link = message.text.strip().split(',')
-    api_key = str(link[0]).replace(' ', '')
-    api_secret = str(link[1]).replace(' ', '')
-
-    session = ccxt.bybit({
-        "apiKey": api_key,
-        "secret": api_secret,
-        "enableRateLimit": True,
-        'timeout': 30000,
-    })
-
     try:
-        session.fetch_balance()
-        msg = ''
-        if language == 'ru':
-            msg = 'Биржа успешно подключена'
-        elif language == 'en':
-            msg = 'Exchange successfully connected'
-        user.api_key = api_key
-        user.api_secret = api_secret
-        user.exchange = 'Bybit'
-        user.save()
+        link = message.text.strip().split(',')
+        api_key = str(link[0]).replace(' ', '')
+        api_secret = str(link[1]).replace(' ', '')
+
+        session = ccxt.bybit({
+            "apiKey": api_key,
+            "secret": api_secret,
+            "enableRateLimit": True,
+            'timeout': 30000,
+        })
+
+        try:
+            session.fetch_balance()
+            msg = ''
+            if language == 'ru':
+                msg = 'Биржа успешно подключена'
+            elif language == 'en':
+                msg = 'Exchange successfully connected'
+            user.api_key = api_key
+            user.api_secret = api_secret
+            user.exchange = 'Bybit'
+            user.save()
+        except:
+            msg = ''
+            if language == 'ru':
+                msg = 'Что-то пошло не так проверьте свои апи и попробуйте снова'
+            elif language == 'en':
+                msg = 'Something went wrong check your api and try again'
+
+        bot.send_message(chat_id, msg, parse_mode='html', reply_markup=gen_markup())
     except:
         msg = ''
         if language == 'ru':
-            msg = 'Что-то пошло не так проверьте свои апи и попробуйте снова'
+            msg = f'Что-то пошло не так! Попробуйте позже или проверьте правильность ввода!'
         elif language == 'en':
-            msg = 'Something went wrong check your api and try again'
+            msg = f'Something went wrong! Try again later or make sure you entered it correctly!'
 
-    bot.send_message(chat_id, msg, parse_mode='html', reply_markup=gen_markup())
-
+        bot.send_message(chat_id, msg, parse_mode='html')
     # user_id = message.from_user.id
     # chat_id = message.chat.id
     #
