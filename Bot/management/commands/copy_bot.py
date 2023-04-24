@@ -101,24 +101,24 @@ class Command(BaseCommand):
                     # и закрываем её
                     print('DELTA = ' + str(round(delta, 2)) + f' {order_s.symbol}/ trader {order_s.name_trader}')
                     if delta >= 1.5:
-                        if order_s.side == 'BUY':
-                            msg = f'<b>📳 TRADE CLOSED 📳</b>\n\n' \
-                                  f'🥷🏾Trader: <b>{order_s.name_trader}</b>\n' \
-                                  f'💎Crypto: <b>{order_s.symbol}</b>\n' \
-                                  f'🔵Trade: <b>BUY</b> (LONG)\n\n' \
-                                  f'📊Marketprice: <b>{order_s.mark_price}</b>\n' \
-                                  f'💹PNL: <b>{round(float(order_s.roe), 2)}%</b>\n\n'
-                            # try:
-                            #     # bots.send_message(my_id, msg, parse_mode='HTML')
-                            # except:
-                            #     pass
-                        else:
-                            msg = f'<b>📳 TRADE CLOSED 📳</b>\n\n' \
-                                  f'🥷🏾Trader: <b>{order_s.name_trader}</b>\n' \
-                                  f'💎Crypto: <b>{order_s.symbol}</b>\n' \
-                                  f'🔴Trade: <b>Sell</b> (SHORT)\n\n' \
-                                  f'📊Marketprice: <b>{order_s.mark_price}</b>\n' \
-                                  f'💹PNL: <b>{round(float(order_s.roe), 2)}%</b>\n\n'
+                        # if order_s.side == 'BUY':
+                        #     # msg = f'<b>📳 TRADE CLOSED 📳</b>\n\n' \
+                        #     #       f'🥷🏾Trader: <b>{order_s.name_trader}</b>\n' \
+                        #     #       f'💎Crypto: <b>{order_s.symbol}</b>\n' \
+                        #     #       f'🔵Trade: <b>BUY</b> (LONG)\n\n' \
+                        #     #       f'📊Marketprice: <b>{order_s.mark_price}</b>\n' \
+                        #     #       f'💹PNL: <b>{round(float(order_s.roe), 2)}%</b>\n\n'
+                        #     # try:
+                        #     #     # bots.send_message(my_id, msg, parse_mode='HTML')
+                        #     # except:
+                        #     #     pass
+                        # else:
+                        #     msg = f'<b>📳 TRADE CLOSED 📳</b>\n\n' \
+                        #           f'🥷🏾Trader: <b>{order_s.name_trader}</b>\n' \
+                        #           f'💎Crypto: <b>{order_s.symbol}</b>\n' \
+                        #           f'🔴Trade: <b>Sell</b> (SHORT)\n\n' \
+                        #           f'📊Marketprice: <b>{order_s.mark_price}</b>\n' \
+                        #           f'💹PNL: <b>{round(float(order_s.roe), 2)}%</b>\n\n'
                             # try:
                             #     bots.send_message(my_id, msg, parse_mode='HTML')
                             # except:

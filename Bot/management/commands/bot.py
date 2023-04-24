@@ -1606,7 +1606,7 @@ def send_welcome(message):
     #                 # f'I see you are new here, here are instructions on how to use the bot: <a href="{en}">EN</a>, ' \
     #                 # f'<a href="{ru}">RU</a>'
 
-        bot.send_message(chat_id, msg_2, reply_markup=gen_markup(), parse_mode='html', disable_web_page_preview=True)
+    bot.send_message(chat_id, msg_2, reply_markup=gen_markup(), parse_mode='html', disable_web_page_preview=True)
 
 
 class Command(BaseCommand):
