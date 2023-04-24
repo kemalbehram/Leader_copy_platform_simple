@@ -480,7 +480,7 @@ def callback_inline(call):
     # создание и обработка рефералов
     if call.data == 'Referral':
         user = Users.objects.get(user_id=call.message.chat.id)
-        language = user.language.language
+        language = user.language
         balance = user.balance
         msg = ''
         count_ref = len(user.referral)
