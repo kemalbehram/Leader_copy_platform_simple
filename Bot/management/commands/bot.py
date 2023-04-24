@@ -79,65 +79,143 @@ def add_binance_api(message):
             "secret": api_secret,
         }
     )
-    msg = ''
+    result = ''
 
     try:
         session.fetch_balance()
-        if language == 'ru':
-            msg = f'Биржа успешно подключена'
-        elif language == 'en':
-            msg = f'Exchange successfully connected'
+        result = 'success'
         Users.objects.filter(user_id=user_id).update(
             api_key=api_key,
             api_secret=api_secret,
             exchange='Binance'
         )
     except:
-        if language == 'ru':
-            msg = f'Что-то пошло не так проверьте свои апи и попробуйте снова'
-        elif language == 'en':
-            msg = f'Something went wrong check your api and try again'
+        result = 'error'
 
+    messages = {
+        'ru': {
+            'success': 'Биржа успешно подключена',
+            'error': 'Что-то пошло не так проверьте свои апи и попробуйте снова'
+        },
+        'en': {
+            'success': 'Exchange successfully connected',
+            'error': 'Something went wrong check your api and try again'
+        }
+    }
+
+    msg = messages[language][result]
     bot.send_message(chat_id, msg, parse_mode='html', reply_markup=gen_markup())
+
+    # user_id = message.from_user.id
+    # chat_id = message.chat.id
+    #
+    # language = Users.objects.get(user_id=user_id).language
+    # # user_name = message.from_user.username
+    # link = str(message.text).split(',')
+    # api_key = str(link[0]).replace(' ', '')
+    # api_secret = str(link[1]).replace(' ', '')
+    # session = ccxt.binance(
+    #     {
+    #         "apiKey": api_key,
+    #         "secret": api_secret,
+    #     }
+    # )
+    # msg = ''
+    #
+    # try:
+    #     session.fetch_balance()
+    #     if language == 'ru':
+    #         msg = f'Биржа успешно подключена'
+    #     elif language == 'en':
+    #         msg = f'Exchange successfully connected'
+    #     Users.objects.filter(user_id=user_id).update(
+    #         api_key=api_key,
+    #         api_secret=api_secret,
+    #         exchange='Binance'
+    #     )
+    # except:
+    #     if language == 'ru':
+    #         msg = f'Что-то пошло не так проверьте свои апи и попробуйте снова'
+    #     elif language == 'en':
+    #         msg = f'Something went wrong check your api and try again'
+    #
+    # bot.send_message(chat_id, msg, parse_mode='html', reply_markup=gen_markup())
 
 
 def add_bybit_api(message):
     user_id = message.from_user.id
     chat_id = message.chat.id
 
-    language = Users.objects.get(user_id=user_id).language
-    # user_name = message.from_user.username
-    link = str(message.text).split(',')
+    user = Users.objects.get(user_id=user_id)
+    language = user.language
+
+    link = message.text.strip().split(',')
     api_key = str(link[0]).replace(' ', '')
     api_secret = str(link[1]).replace(' ', '')
-    session = ccxt.bybit(
-        {
-            "apiKey": api_key,
-            "secret": api_secret,
-            "enableRateLimit": True,
-            'timeout': 30000,
-        }
-    )
-    msg = ''
+
+    session = ccxt.bybit({
+        "apiKey": api_key,
+        "secret": api_secret,
+        "enableRateLimit": True,
+        'timeout': 30000,
+    })
 
     try:
         session.fetch_balance()
+        msg = ''
         if language == 'ru':
-            msg = f'Биржа успешно подключена'
+            msg = 'Биржа успешно подключена'
         elif language == 'en':
-            msg = f'Exchange successfully connected'
-        Users.objects.filter(user_id=user_id).update(
-            api_key=api_key,
-            api_secret=api_secret,
-            exchange='Bybit'
-        )
+            msg = 'Exchange successfully connected'
+        user.api_key = api_key
+        user.api_secret = api_secret
+        user.exchange = 'Bybit'
+        user.save()
     except:
+        msg = ''
         if language == 'ru':
-            msg = f'Что-то пошло не так проверьте свои апи и попробуйте снова'
+            msg = 'Что-то пошло не так проверьте свои апи и попробуйте снова'
         elif language == 'en':
-            msg = f'Something went wrong check your api and try again'
+            msg = 'Something went wrong check your api and try again'
 
     bot.send_message(chat_id, msg, parse_mode='html', reply_markup=gen_markup())
+
+    # user_id = message.from_user.id
+    # chat_id = message.chat.id
+    #
+    # language = Users.objects.get(user_id=user_id).language
+    # # user_name = message.from_user.username
+    # link = str(message.text).split(',')
+    # api_key = str(link[0]).replace(' ', '')
+    # api_secret = str(link[1]).replace(' ', '')
+    # session = ccxt.bybit(
+    #     {
+    #         "apiKey": api_key,
+    #         "secret": api_secret,
+    #         "enableRateLimit": True,
+    #         'timeout': 30000,
+    #     }
+    # )
+    # msg = ''
+    #
+    # try:
+    #     session.fetch_balance()
+    #     if language == 'ru':
+    #         msg = f'Биржа успешно подключена'
+    #     elif language == 'en':
+    #         msg = f'Exchange successfully connected'
+    #     Users.objects.filter(user_id=user_id).update(
+    #         api_key=api_key,
+    #         api_secret=api_secret,
+    #         exchange='Bybit'
+    #     )
+    # except:
+    #     if language == 'ru':
+    #         msg = f'Что-то пошло не так проверьте свои апи и попробуйте снова'
+    #     elif language == 'en':
+    #         msg = f'Something went wrong check your api and try again'
+    #
+    # bot.send_message(chat_id, msg, parse_mode='html', reply_markup=gen_markup())
 
 
 # def remove_trader(message):
@@ -331,8 +409,8 @@ def callback_inline(call):
     #                           reply_markup=reply_markup, parse_mode='html')
     #     # bot.send_message(call.message.chat.id, msg, reply_markup=reply_markup, parse_mode='html')
     if call.data == 'Subscription':
-        language = Users.objects.get(user_id=call.message.chat.id).language
         user = Users.objects.get(user_id=call.message.chat.id)
+        language = user.language
         msg = ''
         if language == 'ru':
             if user.subs_active:
@@ -346,8 +424,7 @@ def callback_inline(call):
             else:
                 msg = f'Your subscription  is not active!!! Update it soon!!!:'
 
-        reply_markup = types.InlineKeyboardMarkup()
-        reply_markup.row_width = 1
+        reply_markup = types.InlineKeyboardMarkup(row_width=1)
         reply_markup.add(
             # types.InlineKeyboardButton("🥉Basic", callback_data='Ordinary'),
             types.InlineKeyboardButton("🥇Buy Subscription", callback_data='VIP'),
@@ -356,6 +433,31 @@ def callback_inline(call):
         )
         bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=msg,
                               reply_markup=reply_markup, parse_mode='html')
+        # language = Users.objects.get(user_id=call.message.chat.id).language
+        # user = Users.objects.get(user_id=call.message.chat.id)
+        # msg = ''
+        # if language == 'ru':
+        #     if user.subs_active:
+        #         msg = f'Ваша подписка активна до {user.subs_date_end}:'
+        #     else:
+        #         msg = f'Ваша подписка не активна!! Обновите её скорее!!:'
+        #
+        # elif language == 'en':
+        #     if user.subs_active:
+        #         msg = f'Your is active until {user.subs_date_end}:'
+        #     else:
+        #         msg = f'Your subscription  is not active!!! Update it soon!!!:'
+        #
+        # reply_markup = types.InlineKeyboardMarkup()
+        # reply_markup.row_width = 1
+        # reply_markup.add(
+        #     # types.InlineKeyboardButton("🥉Basic", callback_data='Ordinary'),
+        #     types.InlineKeyboardButton("🥇Buy Subscription", callback_data='VIP'),
+        #     # types.InlineKeyboardButton("🥈Standard", callback_data='Standard'),
+        #     types.InlineKeyboardButton("🔙Back", callback_data='Back')
+        # )
+        # bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=msg,
+        #                       reply_markup=reply_markup, parse_mode='html')
         # bot.send_message(call.message.chat.id, msg, reply_markup=reply_markup, parse_mode='html')
     if call.data == 'Language':
         language = Users.objects.get(user_id=call.message.chat.id).language
@@ -377,11 +479,11 @@ def callback_inline(call):
         # bot.send_message(call.message.chat.id, msg, reply_markup=reply_markup, parse_mode='html')
     # создание и обработка рефералов
     if call.data == 'Referral':
-        language = Users.objects.get(user_id=call.message.chat.id).language
-        user = Users.objects.get(user_id=call.message.chat.id)
+        user = Users.objects.select_related('language').prefetch_related('referral').get(user_id=call.message.chat.id)
+        language = user.language.language
         balance = user.balance
         msg = ''
-        count_ref = len(Users.objects.filter(referral=user))
+        count_ref = len(user.referral)
 
         link = f'https://t.me/{bot_name}?start={call.message.chat.id}'
         if language == 'ru':
@@ -405,29 +507,71 @@ def callback_inline(call):
         )
         bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=msg,
                               reply_markup=reply_markup, parse_mode='html')
+
+        # language = Users.objects.get(user_id=call.message.chat.id).language
+        # user = Users.objects.get(user_id=call.message.chat.id)
+        # balance = user.balance
+        # msg = ''
+        # count_ref = len(Users.objects.filter(referral=user))
+        #
+        # link = f'https://t.me/{bot_name}?start={call.message.chat.id}'
+        # if language == 'ru':
+        #     msg = f'У вас {count_ref} рефералов\n\n' \
+        #           f'Ваша реферальная ссылка {link}\n\n' \
+        #           f'За каждого активного реферала вы получаете {cashback} USD кэшбек от оплаты подписки!\n' \
+        #           f'Ваш баланс: {balance} USDT\n' \
+        #           f'Чтобы получить выплату напишите администратору @{admin_name}'
+        #
+        # elif language == 'en':
+        #     msg = f'You have {count_ref} referrals\n\n' \
+        #           f'Your referral link {link}\n\n' \
+        #           f'For each active referral you get {cashback} USD cashback on subscription fees!\n' \
+        #           f'Your Balance: {balance} USDT\n' \
+        #           f'To receive a payout write the administrator @{admin_name}'
+        #
+        # reply_markup = types.InlineKeyboardMarkup()
+        # reply_markup.row_width = width
+        # reply_markup.add(
+        #     types.InlineKeyboardButton("🔙Back", callback_data='Back')
+        # )
+        # bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=msg,
+        #                       reply_markup=reply_markup, parse_mode='html')
     # second call part
     # Меняем язык
     if call.data == 'EN':
         Users.objects.filter(user_id=call.message.chat.id).update(language='en')
-        language = Users.objects.get(user_id=call.message.chat.id).language
-        msg = ''
-        if language == 'ru':
-            msg = f'Язык успешно изменен:'
-        elif language == 'en':
-            msg = f'The language has been successfully changed:'
+        user = Users.objects.get(user_id=call.message.chat.id)
+        msg = f'{user.language.capitalize()} language has been successfully changed:'
         bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=msg,
                               reply_markup=gen_markup(), parse_mode='html')
+
+        # Users.objects.filter(user_id=call.message.chat.id).update(language='en')
+        # language = Users.objects.get(user_id=call.message.chat.id).language
+        # msg = ''
+        # if language == 'ru':
+        #     msg = f'Язык успешно изменен:'
+        # elif language == 'en':
+        #     msg = f'The language has been successfully changed:'
+        # bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=msg,
+        #                       reply_markup=gen_markup(), parse_mode='html')
         # bot.send_message(call.message.chat.id, msg, reply_markup=gen_markup(), parse_mode='html')
     if call.data == 'RU':
-        Users.objects.filter(user_id=call.message.chat.id).update(language='ru')
-        language = Users.objects.get(user_id=call.message.chat.id).language
-        msg = ''
-        if language == 'ru':
-            msg = f'Язык успешно изменен:'
-        elif language == 'en':
-            msg = f'The language has been successfully changed:'
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=msg,
+        user_id = call.message.chat.id
+        Users.objects.filter(user_id=user_id).update(language='ru')
+        language = 'ru'  # язык уже обновлен в базе данных, можно сразу присвоить его переменной
+        msg = f'Язык успешно изменен:' if language == 'ru' else f'The language has been successfully changed:'
+        bot.edit_message_text(chat_id=user_id, message_id=call.message.message_id, text=msg,
                               reply_markup=gen_markup(), parse_mode='html')
+
+        # Users.objects.filter(user_id=call.message.chat.id).update(language='ru')
+        # language = Users.objects.get(user_id=call.message.chat.id).language
+        # msg = ''
+        # if language == 'ru':
+        #     msg = f'Язык успешно изменен:'
+        # elif language == 'en':
+        #     msg = f'The language has been successfully changed:'
+        # bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=msg,
+        #                       reply_markup=gen_markup(), parse_mode='html')
         # bot.send_message(call.message.chat.id, msg, reply_markup=gen_markup(), parse_mode='html')
     # настройки подписки выбор тарифа и строка
     if call.data == 'VIP':
@@ -507,7 +651,7 @@ def callback_inline(call):
     # оплата подписок вип
     if call.data == '1vip':
         language = Users.objects.get(user_id=call.message.chat.id).language
-        user = Users.objects.get(user_id=call.message.chat.id)
+        # user = Users.objects.get(user_id=call.message.chat.id)
         # count_ref = len(Users.objects.filter(referral=user, subs_active=True))
         # subs_discount = count_ref * discount
         # if subs_discount > 15:
@@ -1332,37 +1476,66 @@ def handle_payment_confirmation(query):
         Users.objects.filter(user_id=user.reffrel.id).update(
             balance=bal + ref_cashback
         )
-    except:
+    except Users.DoesNotExist:
         print('User dont have referral')
 
-    if user.subs_active:
-        # Получаем сегодняшнюю дату
-        today = user.subs_date_end
+    # Получаем сегодняшнюю дату
+    today = datetime.date.today()
 
-        # Добавляем 30 дней
-        delta = datetime.timedelta(days=30)
-        future_date = today + delta
+    # Добавляем 30 дней
+    delta = datetime.timedelta(days=30)
+    future_date = today + delta
 
-        Users.objects.filter(user_id=user_id).update(
-            subs_date_end=future_date,
-            subs_active=True,
-            subscription_type='VIP'
-        )
-    else:
-        # Получаем сегодняшнюю дату
-        today = datetime.date.today()
+    Users.objects.filter(user_id=user_id).update(
+        subs_date_end=future_date,
+        subs_active=True,
+        subscription_type='VIP'
+    )
 
-        # Добавляем 30 дней
-        delta = datetime.timedelta(days=30)
-        future_date = today + delta
-
-        Users.objects.filter(user_id=user_id).update(
-            subs_date_end=future_date,
-            subs_active=True,
-            subscription_type='VIP'
-        )
     bot.send_message(admin_chat_id, f'Subscription verified for the user  {user_id}')
     bot.send_message(user_id, f'Your subscription has been successfully verified')
+
+    # # извлекаем айди пользователя из колбэк данных и отправляем его в чат с администратором
+    # user_id = int(query.data.split(':')[1])
+    # user = Users.objects.get(user_id=user_id)
+    # try:
+    #     ref = Users.objects.get(user_id=user.reffrel.id)
+    #     ref_cashback = cashback
+    #     bal = ref.balance
+    #     Users.objects.filter(user_id=user.reffrel.id).update(
+    #         balance=bal + ref_cashback
+    #     )
+    # except:
+    #     print('User dont have referral')
+    #
+    # if user.subs_active:
+    #     # Получаем сегодняшнюю дату
+    #     today = user.subs_date_end
+    #
+    #     # Добавляем 30 дней
+    #     delta = datetime.timedelta(days=30)
+    #     future_date = today + delta
+    #
+    #     Users.objects.filter(user_id=user_id).update(
+    #         subs_date_end=future_date,
+    #         subs_active=True,
+    #         subscription_type='VIP'
+    #     )
+    # else:
+    #     # Получаем сегодняшнюю дату
+    #     today = datetime.date.today()
+    #
+    #     # Добавляем 30 дней
+    #     delta = datetime.timedelta(days=30)
+    #     future_date = today + delta
+    #
+    #     Users.objects.filter(user_id=user_id).update(
+    #         subs_date_end=future_date,
+    #         subs_active=True,
+    #         subscription_type='VIP'
+    #     )
+    # bot.send_message(admin_chat_id, f'Subscription verified for the user  {user_id}')
+    # bot.send_message(user_id, f'Your subscription has been successfully verified')
 
 
 @bot.message_handler(commands=['start'])
@@ -1375,42 +1548,63 @@ def send_welcome(message):
 
     referral = str(message.text).replace('/start', '')
 
-    if len(referral) > 1 and referral != user_id:
-        try:
-            Users.objects.get(
-                user_name=user_name,
-                user_id=user_id,
-            )
-            msg_2 = f'Hello {user_name}'
-        except:
+    # if len(referral) > 1 and referral != user_id:
+    try:
+        user = Users.objects.get(
+            user_name=user_name,
+            user_id=user_id,
+        )
+        msg_2 = f'Hello {user_name}'
+    except Users.DoesNotExist:
+        if len(referral) > 1 and referral != user_id:
             ref = Users.objects.get(user_id=int(referral))
             user = Users(
                 user_name=user_name,
                 user_id=user_id,
                 referral=ref
             )
-            user.save()
-            msg_2 = f'Hello {user_name}\n\n' \
-                    # f'I see you are new here, here are instructions on how to use the bot: <a href="{en}">EN</a>, ' \
-                    # f'<a href="{ru}">RU</a>'
-
-        bot.send_message(chat_id, msg_2, reply_markup=gen_markup(), parse_mode='html', disable_web_page_preview=True)
-    else:
-        try:
-            Users.objects.get(
-                user_name=user_name,
-                user_id=user_id,
-            )
-            msg_2 = f'Hello {user_name}'
-        except:
+        else:
             user = Users(
                 user_name=user_name,
                 user_id=user_id,
             )
-            user.save()
-            msg_2 = f'Hello {user_name}\n\n' \
-                    # f'I see you are new here, here are instructions on how to use the bot: <a href="{en}">EN</a>, ' \
-                    # f'<a href="{ru}">RU</a>'
+        user.save()
+        msg_2 = f'Hello {user_name}\n\n'
+    #     try:
+    #         Users.objects.get(
+    #             user_name=user_name,
+    #             user_id=user_id,
+    #         )
+    #         msg_2 = f'Hello {user_name}'
+    #     except:
+    #         ref = Users.objects.get(user_id=int(referral))
+    #         user = Users(
+    #             user_name=user_name,
+    #             user_id=user_id,
+    #             referral=ref
+    #         )
+    #         user.save()
+    #         msg_2 = f'Hello {user_name}\n\n' \
+    #                 # f'I see you are new here, here are instructions on how to use the bot: <a href="{en}">EN</a>, ' \
+    #                 # f'<a href="{ru}">RU</a>'
+    #
+    #     bot.send_message(chat_id, msg_2, reply_markup=gen_markup(), parse_mode='html', disable_web_page_preview=True)
+    # else:
+    #     try:
+    #         Users.objects.get(
+    #             user_name=user_name,
+    #             user_id=user_id,
+    #         )
+    #         msg_2 = f'Hello {user_name}'
+    #     except:
+    #         user = Users(
+    #             user_name=user_name,
+    #             user_id=user_id,
+    #         )
+    #         user.save()
+    #         msg_2 = f'Hello {user_name}\n\n' \
+    #                 # f'I see you are new here, here are instructions on how to use the bot: <a href="{en}">EN</a>, ' \
+    #                 # f'<a href="{ru}">RU</a>'
 
         bot.send_message(chat_id, msg_2, reply_markup=gen_markup(), parse_mode='html', disable_web_page_preview=True)
 
