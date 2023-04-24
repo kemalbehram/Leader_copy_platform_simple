@@ -10,11 +10,11 @@ test = False
 if test:
     token_pay = token_test_pay
     # test telegram token
-    token = '5817843241:AAH5B89odTTPwxnFGdqTfWGv8wzuD20_dP0 '
+    token = '5817843241:AAH5B89odTTPwxnFGdqTfWGv8wzuD20_dP0'
 else:
     token_pay = token_pay_main
     # Main telegram token
-    token = '5817843241:AAH5B89odTTPwxnFGdqTfWGv8wzuD20_dP0 '
+    token = '5817843241:AAH5B89odTTPwxnFGdqTfWGv8wzuD20_dP0'
 
 
 # try:
