@@ -48,9 +48,10 @@ class Command(BaseCommand):
 
                     exc_type, exc_obj, exc_tb = sys.exc_info()
                     print(str(e) + 'line = ' + str(exc_tb.tb_lineno))
-            sleep(1)
+            # sleep(1)
             # получаем ордера со статусом Фолс
             signals = Signal.objects.filter(status=False)
+            sleep(0.2)
             # получаем айди трейдеров и
             users = Users.objects.filter(subs_active=True)
             for signal in signals:
@@ -73,7 +74,7 @@ class Command(BaseCommand):
                     exc_type, exc_obj, exc_tb = sys.exc_info()
                     print(str(e) + 'line = ' + str(exc_tb.tb_lineno))
                 for user in users:
-                    sleep(0.3)
+                    # sleep(0.3)
                     try:
                         t = threading.Thread(target=open_position, args=(signal, user))
                         t.start()
@@ -88,7 +89,7 @@ class Command(BaseCommand):
 
             # обновляем статус сигналов
             signals.update(status=True)
-            sleep(1)
+            # sleep(1)
             # получаем активные ордера
             sig_ord = Signal.objects.filter(is_active=True, status=True)
 
