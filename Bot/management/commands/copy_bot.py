@@ -31,13 +31,13 @@ class Command(BaseCommand):
             sleep(10)
             traders = Traders.objects.filter(is_active=True)
             for trade in traders:
-                sleep(0.3)
+                # sleep(0.3)
                 try:
-                    # get_trader_1(
-                    #     trade.link, trade.name, trade
-                    # )
-                    t = threading.Thread(target=get_trader_1, args=(trade.link, trade.name, trade))
-                    t.start()
+                    get_trader_1(
+                        trade.link, trade.name, trade
+                    )
+                    # t = threading.Thread(target=get_trader_1, args=(trade.link, trade.name, trade))
+                    # t.start()
                 except Exception as e:
                     # The name of your app and dyno
                     app_name = 'aws copy-trade-leaderboard'
@@ -103,7 +103,7 @@ class Command(BaseCommand):
                     # если срок годности ордера больше 1 минут, то получаем информацию об открытой позиции
                     # и закрываем её
                     print('DELTA = ' + str(round(delta, 2)) + f' {order_s.symbol}/ trader {order_s.name_trader}')
-                    if delta >= 1:
+                    if delta >= 1.5:
                         # if order_s.side == 'BUY':
                         #     # msg = f'<b>📳 TRADE CLOSED 📳</b>\n\n' \
                         #     #       f'🥷🏾Trader: <b>{order_s.name_trader}</b>\n' \
