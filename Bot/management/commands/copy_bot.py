@@ -51,11 +51,11 @@ class Command(BaseCommand):
             # sleep(1)
             # получаем ордера со статусом Фолс
             signals = Signal.objects.filter(status=False)
-            sleep(0.2)
+            # sleep(0.2)
             # получаем айди трейдеров и
             users = Users.objects.filter(subs_active=True)
             for signal in signals:
-                sleep(0.3)
+                # sleep(0.3)
                 # try:
                 #     bots.send_message(
                 #         my_id, signal.message, parse_mode='HTML'
@@ -105,7 +105,7 @@ class Command(BaseCommand):
                     # если срок годности ордера больше 1 минут, то получаем информацию об открытой позиции
                     # и закрываем её
                     print('DELTA = ' + str(round(delta, 2)) + f' {order_s.symbol}/ trader {order_s.name_trader}')
-                    if delta >= 1.5:
+                    if delta >= 0.58:
                         # if order_s.side == 'BUY':
                         #     # msg = f'<b>📳 TRADE CLOSED 📳</b>\n\n' \
                         #     #       f'🥷🏾Trader: <b>{order_s.name_trader}</b>\n' \
