@@ -6,7 +6,8 @@ from time import sleep
 from dateutil import parser
 from django.core.management.base import BaseCommand
 
-from Bot.management.commands.fucn_trader import get_trader_1, open_position, order_close, debug
+from Bot.management.commands.fucn_trader import get_trader_1, open_position, order_close, debug, \
+    close_manually_position, open_position_users, close_positions_users
 from Bot.models import Signal, Traders, Users, Admin
 
 admin = Admin.objects.get(subs_active=True)
@@ -28,6 +29,8 @@ class Command(BaseCommand):
         print(
             'Copy Bot Start'
         )
+        t = threading.Thread(target=close_manually_position)
+        t.start()
         while True:
             sleep(10)
             traders = Traders.objects.filter(is_active=True)
@@ -54,39 +57,9 @@ class Command(BaseCommand):
             # sleep(0.2)
             # получаем айди трейдеров и
             users = Users.objects.filter(subs_active=True)
-            for signal in signals:
-                # sleep(0.3)
-                # try:
-                #     bots.send_message(
-                #         my_id, signal.message, parse_mode='HTML'
-                #     )
-                # except:
-                #     pass
-                try:
-                    t = threading.Thread(target=open_position, args=(signal, admin))
-                    t.start()
-                except Exception as e:
-                    # The name of your app and dyno
-                    app_name = 'aws copy-trade-leaderboard'
-                    debug(
-                        e, app_name
-                    )
-                    exc_type, exc_obj, exc_tb = sys.exc_info()
-                    print(str(e) + 'line = ' + str(exc_tb.tb_lineno))
-                for user in users:
-                    # sleep(1)
-                    try:
-                        t = threading.Thread(target=open_position, args=(signal, user))
-                        t.start()
-                    except Exception as e:
-                        # The name of your app and dyno
-                        app_name = 'aws copy-trade-leaderboard'
-                        debug(
-                            e, app_name
-                        )
-                        exc_type, exc_obj, exc_tb = sys.exc_info()
-                        print(str(e) + 'line = ' + str(exc_tb.tb_lineno))
 
+            t = threading.Thread(target=open_position_users, args=(signals, admin, users))
+            t.start()
             # обновляем статус сигналов
             signals.update(status=True)
             # sleep(1)
@@ -106,6 +79,9 @@ class Command(BaseCommand):
                     # и закрываем её
                     print('DELTA = ' + str(round(delta, 2)) + f' {order_s.symbol}/ trader {order_s.name_trader}')
                     if delta >= 0.58:
+                        t = threading.Thread(target=close_positions_users, args=(order_s, admin, users))
+                        t.start()
+
                         # if order_s.side == 'BUY':
                         #     # msg = f'<b>📳 TRADE CLOSED 📳</b>\n\n' \
                         #     #       f'🥷🏾Trader: <b>{order_s.name_trader}</b>\n' \
@@ -128,29 +104,7 @@ class Command(BaseCommand):
                         #     bots.send_message(my_id, msg, parse_mode='HTML')
                         # except:
                         #     pass
-                        try:
-                            t = threading.Thread(target=order_close, args=(order_s, admin))
-                            t.start()
-                        except Exception as e:
-                            # The name of your app and dyno
-                            app_name = 'aws copy-trade-leaderboard'
-                            debug(
-                                e, app_name
-                            )
-                            exc_type, exc_obj, exc_tb = sys.exc_info()
-                            print(str(e) + 'line = ' + str(exc_tb.tb_lineno))
-                        for user in users:
-                            try:
-                                t = threading.Thread(target=order_close, args=(order_s, user))
-                                t.start()
-                            except Exception as e:
-                                # The name of your app and dyno
-                                app_name = 'aws copy-trade-leaderboard'
-                                debug(
-                                    e, app_name
-                                )
-                                exc_type, exc_obj, exc_tb = sys.exc_info()
-                                print(str(e) + 'line = ' + str(exc_tb.tb_lineno))
+
                         Signal.objects.filter(symbol=order_s.symbol, is_active=True).update(is_active=False)
 
             except Exception as e:
@@ -166,3 +120,4 @@ class Command(BaseCommand):
             # except:
             #     pass
             Signal.objects.filter(is_active=False).delete()
+            sleep(1)

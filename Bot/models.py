@@ -138,3 +138,9 @@ class Signal(models.Model):
 
     def __str__(self):
         return self.name_trader.name + '/' + self.symbol
+
+class ClosePosition(models.Model):
+    close_all = models.BooleanField(default=True, verbose_name='Close the position with all users')
+    # name_user = models.ForeignKey('Users', on_delete=models.CASCADE, blank=True)
+    position = models.ForeignKey('Signal', on_delete=models.CASCADE, blank=True)
+    status = models.BooleanField(default=True)

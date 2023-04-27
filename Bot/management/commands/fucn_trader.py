@@ -1,5 +1,6 @@
 import json
 import sys
+import threading
 from datetime import datetime  # , timedelta
 from pprint import pprint
 from time import sleep
@@ -13,7 +14,7 @@ from ccxt.base.decimal_to_precision import DECIMAL_PLACES  # noqa F401
 from ccxt.base.decimal_to_precision import ROUND  # noqa F401
 from ccxt.base.decimal_to_precision import decimal_to_precision  # noqa F401
 
-from Bot.models import Signal, Users
+from Bot.models import Signal, Users, ClosePosition, Admin
 
 api = '8df03c1906ff35c53203563774fa3b53'
 id_url = 'https://www.binance.com/bapi/futures/v2/public/future/leaderboard/getLeaderboardRank'
@@ -698,3 +699,86 @@ def get_trader_1(link, name, trade):
                 exc_type, exc_obj, exc_tb = sys.exc_info()
                 print(str(e) + 'line = ' + str(exc_tb.tb_lineno))
                 print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
+
+
+def close_positions_users(order_s, admin, users):
+    try:
+        t = threading.Thread(target=order_close, args=(order_s, admin))
+        t.start()
+    except Exception as e:
+        # The name of your app and dyno
+        app_name = 'aws copy-trade-leaderboard'
+        debug(
+            e, app_name
+        )
+        exc_type, exc_obj, exc_tb = sys.exc_info()
+        print(str(e) + 'line = ' + str(exc_tb.tb_lineno))
+    for user in users:
+        sleep(0.4)
+        try:
+            t = threading.Thread(target=order_close, args=(order_s, user))
+            t.start()
+        except Exception as e:
+            # The name of your app and dyno
+            app_name = 'aws copy-trade-leaderboard'
+            debug(
+                e, app_name
+            )
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            print(str(e) + 'line = ' + str(exc_tb.tb_lineno))
+
+
+def open_position_users(signals, admin, users):
+    for signal in signals:
+        sleep(0.3)
+        try:
+            t = threading.Thread(target=open_position, args=(signal, admin))
+            t.start()
+        except Exception as e:
+            # The name of your app and dyno
+            app_name = 'aws copy-trade-leaderboard'
+            debug(
+                e, app_name
+            )
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            print(str(e) + 'line = ' + str(exc_tb.tb_lineno))
+        for user in users:
+            sleep(0.5)
+            try:
+                t = threading.Thread(target=open_position, args=(signal, user))
+                t.start()
+            except Exception as e:
+                # The name of your app and dyno
+                app_name = 'aws copy-trade-leaderboard'
+                debug(
+                    e, app_name
+                )
+                exc_type, exc_obj, exc_tb = sys.exc_info()
+                print(str(e) + 'line = ' + str(exc_tb.tb_lineno))
+
+
+def close_manually_position():
+    while True:
+        sleep(11)
+        if ClosePosition.objects.filter(status=True).exists():
+            order = ClosePosition.objects.get(status=True)
+
+            users = Users.objects.filter(subs_active=True)
+            admin = Admin.objects.get(subs_active=True)
+            order_s = Signal.objects.get(id=order.id)
+            try:
+                t = threading.Thread(target=order_close, args=(order_s, admin))
+                t.start()
+            except Exception as e:
+                # The name of your app and dyno
+                exc_type, exc_obj, exc_tb = sys.exc_info()
+                print(str(e) + 'line = ' + str(exc_tb.tb_lineno))
+            for user in users:
+                sleep(0.3)
+                try:
+                    t = threading.Thread(target=order_close, args=(order_s, user))
+                    t.start()
+                except Exception as e:
+                    # The name of your app and dyno
+                    exc_type, exc_obj, exc_tb = sys.exc_info()
+                    print(str(e) + 'line = ' + str(exc_tb.tb_lineno))

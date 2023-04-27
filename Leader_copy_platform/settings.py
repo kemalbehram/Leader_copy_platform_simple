@@ -140,7 +140,11 @@ SIMPLEUI_CONFIG = {
             'name': 'TRADERS',
             'url': 'Bot/traders/',
             'icon': 'fas fa-address-book'
-        }, ]
+        },  {
+            'name': 'ClosePosition',
+            'url': 'Bot/closeposition/',
+            'icon': 'fas fa-address-book'
+        }]
     }, {
         'app': 'auth',
         'name': 'Permission',
