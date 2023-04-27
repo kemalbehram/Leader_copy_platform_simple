@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from Bot.models import Admin, Traders, Signal, Users
+from Bot.models import Admin, Traders, Signal, Users, ClosePosition
 
 
 @admin.register(Admin)
@@ -23,6 +23,9 @@ class TradersAdmin(admin.ModelAdmin):
     list_display = ['name', 'link']
 
 
+@admin.register(ClosePosition)
+class TradersAdmin(admin.ModelAdmin):
+    list_display = ['position', 'status']
 # @admin.register(UserFollowing)
 # class TradersAdmin(admin.ModelAdmin):
 #     list_display = ['trader_f', 'user_f']
