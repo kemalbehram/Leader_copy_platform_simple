@@ -352,13 +352,17 @@ def open_position(signal, user):
                 try:
                     client.futures_change_margin_type(symbol=symbol,
                                                       marginType='CROSSED')
-                except Exception as e:
+                except:
                     pass
                 try:
                     client.futures_change_leverage(
                         symbol=symbol,
                         leverage=leverage
                     )
+                except:
+                    pass
+                try:
+                    client.futures_change_position_mode(dualSidePosition=False)
                 except:
                     pass
                 current_price = signal.entry_price

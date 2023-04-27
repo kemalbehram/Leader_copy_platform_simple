@@ -55,7 +55,7 @@ class Command(BaseCommand):
             # получаем айди трейдеров и
             users = Users.objects.filter(subs_active=True)
             for signal in signals:
-                # sleep(0.3)
+                sleep(0.3)
                 # try:
                 #     bots.send_message(
                 #         my_id, signal.message, parse_mode='HTML'
@@ -74,7 +74,7 @@ class Command(BaseCommand):
                     exc_type, exc_obj, exc_tb = sys.exc_info()
                     print(str(e) + 'line = ' + str(exc_tb.tb_lineno))
                 for user in users:
-                    # sleep(0.3)
+                    sleep(1)
                     try:
                         t = threading.Thread(target=open_position, args=(signal, user))
                         t.start()
