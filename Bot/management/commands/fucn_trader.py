@@ -2,6 +2,8 @@ import json
 import sys
 from datetime import datetime  # , timedelta
 from pprint import pprint
+from time import sleep
+
 # from time import sleep
 
 import requests
@@ -146,6 +148,7 @@ def get_orders(name_trader, symbol, date, size, mark_price, pnl, roe):
 
 
 def order_close(signal, user):
+    sleep(2)
     try:
         if user.subs_active:
             symbol = signal.symbol
@@ -313,6 +316,7 @@ def order_close(signal, user):
 
 
 def open_position(signal, user):
+    sleep(2)
     try:
         if user.subs_active:
             symbol = signal.symbol
