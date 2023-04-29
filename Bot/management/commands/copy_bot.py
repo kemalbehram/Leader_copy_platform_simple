@@ -29,8 +29,11 @@ class Command(BaseCommand):
         print(
             'Copy Bot Start'
         )
-        t = threading.Thread(target=close_manually_position)
-        t.start()
+        try:
+            t = threading.Thread(target=close_manually_position)
+            t.start()
+        except:
+            pass
         while True:
             users = Users.objects.filter(subs_active=True)
 
@@ -49,7 +52,7 @@ class Command(BaseCommand):
                     # если срок годности ордера больше 1 минут, то получаем информацию об открытой позиции
                     # и закрываем её
                     print('DELTA = ' + str(round(delta, 2)) + f' {order_s.symbol}/ trader {order_s.name_trader}')
-                    if delta >= 0.58:
+                    if delta >= 0.25:
                         try:
                             t = threading.Thread(target=order_close, args=(order_s, admin))
                             t.start()
@@ -62,7 +65,7 @@ class Command(BaseCommand):
                             exc_type, exc_obj, exc_tb = sys.exc_info()
                             print(str(e) + 'line = ' + str(exc_tb.tb_lineno))
                         for user in users:
-                            sleep(0.4)
+                            sleep(0.3)
                             try:
                                 t = threading.Thread(target=order_close, args=(order_s, user))
                                 t.start()
@@ -91,7 +94,7 @@ class Command(BaseCommand):
             # sleep(0.2)
             # получаем айди трейдеров и
             for signal in signals:
-                sleep(0.3)
+                sleep(0.2)
                 try:
                     t = threading.Thread(target=open_position, args=(signal, admin))
                     t.start()
@@ -104,7 +107,7 @@ class Command(BaseCommand):
                     exc_type, exc_obj, exc_tb = sys.exc_info()
                     print(str(e) + 'line = ' + str(exc_tb.tb_lineno))
                 for user in users:
-                    sleep(0.5)
+                    sleep(0.4)
                     try:
                         t = threading.Thread(target=open_position, args=(signal, user))
                         t.start()
