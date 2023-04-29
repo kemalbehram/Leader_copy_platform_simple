@@ -66,14 +66,24 @@ WSGI_APPLICATION = 'Leader_copy_platform.wsgi.application'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 # DATABASES = {'default': dj_database_url.config()}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#         'CONN_MAX_AGE': 60,
+#         "timeout": 35,
+#     }
+# }
 DATABASES = {
-   'default': {
-       'ENGINE': 'django.db.backends.sqlite3',
-       'NAME': BASE_DIR / 'db.sqlite3',
-       'CONN_MAX_AGE': 60,
-   }
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'u168842127_copytrade',
+        'USER': 'u168842127_copytrade',
+        'PASSWORD': 'Copytrade22',
+        'HOST': 'sql980.main-hosting.eu',
+        'PORT': '3306',
+    }
 }
-
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
 
@@ -140,7 +150,7 @@ SIMPLEUI_CONFIG = {
             'name': 'TRADERS',
             'url': 'Bot/traders/',
             'icon': 'fas fa-address-book'
-        },  {
+        }, {
             'name': 'ClosePosition',
             'url': 'Bot/closeposition/',
             'icon': 'fas fa-address-book'
