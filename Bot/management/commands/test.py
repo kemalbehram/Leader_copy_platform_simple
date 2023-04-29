@@ -32,11 +32,15 @@
 # pprint(
 #     json.loads(r.content)
 # )
-from binance import Client
+# from binance import Client
+#
+# client = Client(
+#                     'FeaJpM1XEUrNQz6lTfWBDToHFWIdkEfuachTf3CFwcVBAGPXdBu7sCY7zwkVSpBs',
+#                     'gnqUABHC5CvpCLV0HN4sbH85eZxM5AXwprQ0nkiyJqqlJjKOBQQXMPGkJCuE4Wvw',
+#                 )
+from datetime import datetime
 
-client = Client(
-                    'FeaJpM1XEUrNQz6lTfWBDToHFWIdkEfuachTf3CFwcVBAGPXdBu7sCY7zwkVSpBs',
-                    'gnqUABHC5CvpCLV0HN4sbH85eZxM5AXwprQ0nkiyJqqlJjKOBQQXMPGkJCuE4Wvw',
-                )
+from Bot.models import Signal
 
-
+Signal.objects.filter().update(upd=datetime.now(),
+                               )

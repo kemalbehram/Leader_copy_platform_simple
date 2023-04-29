@@ -34,6 +34,11 @@ class Command(BaseCommand):
             t.start()
         except:
             pass
+        try:
+            Signal.objects.filter().update(upd=datetime.now(),
+                                           )
+        except:
+            pass
         while True:
             users = Users.objects.filter(subs_active=True)
 
